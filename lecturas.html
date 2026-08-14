@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="description"
+        content="Lecturas diarias de la Palabra de Dios - Cristo Vive – Sullana."
+    >
+
+    <title>Lecturas diarias | Cristo Vive – Sullana</title>
+
+    <link rel="stylesheet" href="css/estilos.css">
+
+    <link
+        href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+        rel="stylesheet"
+    >
+
+</head>
+
+
+<body>
+
+
+    <!-- ==========================================
+         HEADER
+    =========================================== -->
+
+    <header class="header">
+
+        <div class="container header-container">
+
+
+            <!-- LOGO -->
+
+            <a href="index.html" class="logo">
+
+                <span class="logo-icon">
+                    <i class="bx bx-cross"></i>
+                </span>
+
+                <span class="logo-text">
+
+                    <strong>Cristo Vive</strong>
+
+                    <small>Sullana</small>
+
+                </span>
+
+            </a>
+
+
+            <!-- MENÚ MÓVIL -->
+
+            <button
+                class="menu-toggle"
+                id="menuToggle"
+                aria-label="Abrir menú"
+            >
+
+                <i class="bx bx-menu"></i>
+
+            </button>
+
+
+            <!-- NAVEGACIÓN -->
+
+            <nav class="nav" id="nav">
+
+                <a href="index.html" class="nav-link">
+
+                    <i class="bx bx-home"></i>
+
+                    Inicio
+
+                </a>
+
+
+                <a
+                    href="lecturas.html"
+                    class="nav-link active"
+                >
+
+                    <i class="bx bx-book-open"></i>
+
+                    Lecturas
+
+                </a>
+
+
+                <a href="videos.html" class="nav-link">
+
+                    <i class="bx bx-video"></i>
+
+                    Videos
+
+                </a>
+
+
+                <a href="reflexiones.html" class="nav-link">
+
+                    <i class="bx bx-heart"></i>
+
+                    Reflexiones
+
+                </a>
+
+
+                <a href="estudios.html" class="nav-link">
+
+                    <i class="bx bx-book"></i>
+
+                    Estudios
+
+                </a>
+
+
+                <a href="sermones.html" class="nav-link">
+
+                    <i class="bx bx-microphone"></i>
+
+                    Sermones
+
+                </a>
+
+
+                <a href="sobre-mi.html" class="nav-link">
+
+                    <i class="bx bx-user"></i>
+
+                    Nosotros
+
+                </a>
+
+
+                <a href="contacto.html" class="nav-link">
+
+                    <i class="bx bx-envelope"></i>
+
+                    Contacto
+
+                </a>
+
+            </nav>
+
+        </div>
+
+    </header>
+
+
+
+    <main>
+
+
+        <!-- ==========================================
+             ENCABEZADO
+        =========================================== -->
+
+        <section class="page-header">
+
+            <div class="container">
+
+                <span class="section-subtitle">
+                    Palabra de Dios
+                </span>
+
+                <h1>
+                    Lecturas diarias
+                </h1>
+
+                <p>
+                    Lee, escucha y medita en la Palabra de Dios
+                    cada día.
+                </p>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ==========================================
+             SELECTORES
+        =========================================== -->
+
+        <section class="reading-selector section">
+
+            <div class="container">
+
+
+                <div class="section-heading">
+
+                    <span class="section-subtitle">
+                        Archivo de lecturas
+                    </span>
+
+                    <h2>
+                        Selecciona una fecha
+                    </h2>
+
+                    <p>
+                        Elige el mes y el día que deseas consultar.
+                    </p>
+
+                </div>
+
+
+                <div class="selectors">
+
+
+                    <div class="selector-group">
+
+                        <label for="mesSelect">
+                            Mes
+                        </label>
+
+                        <select id="mesSelect">
+
+                            <option value="agosto">
+                                Agosto
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="selector-group">
+
+                        <label for="diaSelect">
+                            Día
+                        </label>
+
+                        <select id="diaSelect">
+
+                            <option value="12">
+                                12 de agosto
+                            </option>
+
+                            <option value="13">
+                                13 de agosto
+                            </option>
+
+                            <option value="14">
+                                14 de agosto
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ==========================================
+             CONTENIDO DE LA LECTURA
+        =========================================== -->
+
+        <section class="daily-reading section">
+
+            <div class="container">
+
+                <div
+                    id="readingContent"
+                    class="reading-content"
+                >
+
+                    <!-- JavaScript cargará aquí la lectura -->
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+
+    <!-- ==========================================
+         FOOTER
+    =========================================== -->
+
+    <footer class="footer">
+
+        <div class="container footer-container">
+
+
+            <div class="footer-brand">
+
+                <a href="index.html" class="logo">
+
+                    <span class="logo-icon">
+                        <i class="bx bx-cross"></i>
+                    </span>
+
+                    <span class="logo-text">
+
+                        <strong>Cristo Vive</strong>
+
+                        <small>Sullana</small>
+
+                    </span>
+
+                </a>
+
+
+                <p>
+                    Compartiendo la Palabra de Dios
+                    y llevando un mensaje de esperanza.
+                </p>
+
+            </div>
+
+
+            <div class="footer-links">
+
+                <h3>
+                    Enlaces
+                </h3>
+
+                <a href="index.html">
+                    Inicio
+                </a>
+
+                <a href="lecturas.html">
+                    Lecturas
+                </a>
+
+                <a href="videos.html">
+                    Videos
+                </a>
+
+            </div>
+
+
+            <div class="footer-social">
+
+                <h3>
+                    Síguenos
+                </h3>
+
+                <div class="social-links">
+
+                    <a
+                        href="#"
+                        aria-label="YouTube"
+                    >
+
+                        <i class="bx bxl-youtube"></i>
+
+                    </a>
+
+
+                    <a
+                        href="#"
+                        aria-label="Facebook"
+                    >
+
+                        <i class="bx bxl-facebook"></i>
+
+                    </a>
+
+
+                    <a
+                        href="#"
+                        aria-label="Instagram"
+                    >
+
+                        <i class="bx bxl-instagram"></i>
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="footer-bottom">
+
+            <p>
+                © 2026 Cristo Vive – Sullana.
+                Todos los derechos reservados.
+            </p>
+
+        </div>
+
+    </footer>
+
+
+
+    <!-- ==========================================
+         JAVASCRIPT
+    =========================================== -->
+
+    <script src="js/main.js"></script>
+
+    <script src="js/contenido.js"></script>
+
+    <script src="js/mostrarLecturas.js"></script>
+
+</body>
+
+</html>
+```

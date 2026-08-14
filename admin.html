@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="description"
+        content="Panel de administración de Cristo Vive – Sullana"
+    >
+
+    <title>Administración | Cristo Vive – Sullana</title>
+
+    <link rel="stylesheet" href="css/estilos.css">
+
+    <link
+        href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+        rel="stylesheet"
+    >
+
+</head>
+
+
+<body class="admin-page">
+
+
+    <!-- ==========================================
+         HEADER
+    =========================================== -->
+
+    <header class="header">
+
+        <div class="container header-container">
+
+            <a href="index.html" class="logo">
+
+                <span class="logo-icon">
+                    <i class="bx bx-cross"></i>
+                </span>
+
+                <span class="logo-text">
+
+                    <strong>Cristo Vive</strong>
+
+                    <small>Sullana</small>
+
+                </span>
+
+            </a>
+
+
+            <a href="lecturas.html" class="btn btn-outline">
+
+                <i class="bx bx-book-open"></i>
+
+                Ver lecturas
+
+            </a>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- ==========================================
+         PANEL
+    =========================================== -->
+
+    <main>
+
+        <section class="admin-header">
+
+            <div class="container">
+
+                <span class="section-subtitle">
+                    Administración
+                </span>
+
+                <h1>
+                    Gestionar lecturas
+                </h1>
+
+                <p>
+                    Agrega y actualiza las lecturas,
+                    videos y meditaciones de cada día.
+                </p>
+
+            </div>
+
+        </section>
+
+
+
+        <section class="admin-content section">
+
+            <div class="container">
+
+
+                <!-- ==================================
+                     FECHA
+                =================================== -->
+
+                <div class="admin-card">
+
+                    <div class="admin-card-header">
+
+                        <i class="bx bx-calendar"></i>
+
+                        <div>
+
+                            <h2>
+                                Fecha de la lectura
+                            </h2>
+
+                            <p>
+                                Selecciona el día que deseas editar.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="admin-grid">
+
+                        <div class="form-group">
+
+                            <label for="adminMes">
+                                Mes
+                            </label>
+
+                            <select id="adminMes">
+
+                                <option value="agosto">
+                                    Agosto
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="adminDia">
+                                Día
+                            </label>
+
+                            <select id="adminDia">
+
+                                <option value="12">
+                                    12 de agosto
+                                </option>
+
+                                <option value="13">
+                                    13 de agosto
+                                </option>
+
+                                <option value="14">
+                                    14 de agosto
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ==================================
+                     LECTURA 1
+                =================================== -->
+
+                <div class="admin-card">
+
+                    <div class="admin-card-header">
+
+                        <i class="bx bx-book-open"></i>
+
+                        <div>
+
+                            <h2>
+                                Lectura 1
+                            </h2>
+
+                            <p>
+                                Primera lectura bíblica del día.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="referencia1">
+                            Referencia bíblica
+                        </label>
+
+                        <input
+                            type="text"
+                            id="referencia1"
+                            placeholder="Ejemplo: 2 Corintios 13"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="version1">
+                            Versión bíblica
+                        </label>
+
+                        <select id="version1">
+
+                            <option value="RVR1960">
+                                Reina-Valera 1960 (RVR1960)
+                            </option>
+
+                            <option value="TLA">
+                                Traducción en Lenguaje Actual (TLA)
+                            </option>
+
+                            <option value="NVI">
+                                Nueva Versión Internacional (NVI)
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="texto1">
+                            Texto bíblico
+                        </label>
+
+                        <textarea
+                            id="texto1"
+                            rows="12"
+                            placeholder="Pega aquí el texto bíblico..."
+                        ></textarea>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ==================================
+                     LECTURA 2
+                =================================== -->
+
+                <div class="admin-card">
+
+                    <div class="admin-card-header">
+
+                        <i class="bx bx-book-open"></i>
+
+                        <div>
+
+                            <h2>
+                                Lectura 2
+                            </h2>
+
+                            <p>
+                                Segunda lectura bíblica del día.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="referencia2">
+                            Referencia bíblica
+                        </label>
+
+                        <input
+                            type="text"
+                            id="referencia2"
+                            placeholder="Ejemplo: 1 Crónicas 3–4"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="version2">
+                            Versión bíblica
+                        </label>
+
+                        <select id="version2">
+
+                            <option value="RVR1960">
+                                Reina-Valera 1960 (RVR1960)
+                            </option>
+
+                            <option value="TLA">
+                                Traducción en Lenguaje Actual (TLA)
+                            </option>
+
+                            <option value="NVI">
+                                Nueva Versión Internacional (NVI)
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="texto2">
+                            Texto bíblico
+                        </label>
+
+                        <textarea
+                            id="texto2"
+                            rows="12"
+                            placeholder="Pega aquí el texto bíblico..."
+                        ></textarea>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ==================================
+                     LECTURA 3
+                =================================== -->
+
+                <div class="admin-card">
+
+                    <div class="admin-card-header">
+
+                        <i class="bx bx-book-open"></i>
+
+                        <div>
+
+                            <h2>
+                                Lectura 3
+                            </h2>
+
+                            <p>
+                                Tercera lectura bíblica del día.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="referencia3">
+                            Referencia bíblica
+                        </label>
+
+                        <input
+                            type="text"
+                            id="referencia3"
+                            placeholder="Ejemplo: Sofonías 1"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="version3">
+                            Versión bíblica
+                        </label>
+
+                        <select id="version3">
+
+                            <option value="RVR1960">
+                                Reina-Valera 1960 (RVR1960)
+                            </option>
+
+                            <option value="TLA">
+                                Traducción en Lenguaje Actual (TLA)
+                            </option>
+
+                            <option value="NVI">
+                                Nueva Versión Internacional (NVI)
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="texto3">
+                            Texto bíblico
+                        </label>
+
+                        <textarea
+                            id="texto3"
+                            rows="12"
+                            placeholder="Pega aquí el texto bíblico..."
+                        ></textarea>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ==================================
+                     VIDEO
+                =================================== -->
+
+                <div class="admin-card">
+
+                    <div class="admin-card-header">
+
+                        <i class="bx bx-video"></i>
+
+                        <div>
+
+                            <h2>
+                                Video de YouTube
+                            </h2>
+
+                            <p>
+                                Agrega el video correspondiente a esta lectura.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-check">
+
+                        <input
+                            type="checkbox"
+                            id="videoDisponible"
+                        >
+
+                        <label for="videoDisponible">
+                            Hay video disponible
+                        </label>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="youtubeId">
+                            ID del video de YouTube
+                        </label>
+
+                        <input
+                            type="text"
+                            id="youtubeId"
+                            placeholder="Ejemplo: pbXm6tUyc3M"
+                        >
+
+                        <small>
+                            Es el código que aparece después de
+                            <strong>watch?v=</strong>
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ==================================
+                     MEDITACIÓN
+                =================================== -->
+
+                <div class="admin-card">
+
+                    <div class="admin-card-header">
+
+                        <i class="bx bx-heart"></i>
+
+                        <div>
+
+                            <h2>
+                                Meditación
+                            </h2>
+
+                            <p>
+                                Agrega la meditación y los datos del colaborador.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-check">
+
+                        <input
+                            type="checkbox"
+                            id="meditacionDisponible"
+                        >
+
+                        <label for="meditacionDisponible">
+                            Hay meditación disponible
+                        </label>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="autorMeditacion">
+                            Colaborador
+                        </label>
+
+                        <input
+                            type="text"
+                            id="autorMeditacion"
+                            placeholder="Nombre del colaborador"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="fechaMeditacion">
+                            Fecha de publicación
+                        </label>
+
+                        <input
+                            type="date"
+                            id="fechaMeditacion"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="agradecimiento">
+                            Agradecimiento
+                        </label>
+
+                        <textarea
+                            id="agradecimiento"
+                            rows="4"
+                            placeholder="Agradecimiento al colaborador..."
+                        ></textarea>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="contenidoMeditacion">
+                            Meditación
+                        </label>
+
+                        <textarea
+                            id="contenidoMeditacion"
+                            rows="18"
+                            placeholder="Escribe o pega aquí la meditación..."
+                        ></textarea>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ==================================
+                     BOTONES
+                =================================== -->
+
+                <div class="admin-actions">
+
+                    <button
+                        type="button"
+                        id="btnCargar"
+                        class="btn btn-outline"
+                    >
+
+                        <i class="bx bx-refresh"></i>
+
+                        Cargar día
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        id="btnGuardar"
+                        class="btn btn-primary"
+                    >
+
+                        <i class="bx bx-save"></i>
+
+                        Guardar cambios
+
+                    </button>
+
+                </div>
+
+
+                <div
+                    id="adminMessage"
+                    class="admin-message"
+                ></div>
+
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+
+    <!-- ==========================================
+         JAVASCRIPT
+    =========================================== -->
+
+    <script src="js/contenido.js"></script>
+
+    <script src="js/admin.js"></script>
+
+</body>
+
+</html>

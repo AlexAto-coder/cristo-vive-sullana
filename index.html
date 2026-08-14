@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description"
+        content="Cristo Vive – Sullana. Un espacio para compartir la Palabra de Dios, sermones, reflexiones, estudios bíblicos y videos.">
+
+    <meta name="author" content="Cristo Vive – Sullana">
+
+    <title>Cristo Vive – Sullana | Fe, Palabra y Vida</title>
+
+    <!-- Hoja de estilos -->
+    <link rel="stylesheet" href="css/estilos.css">
+
+    <!-- Boxicons -->
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- =========================
+         ENCABEZADO
+    ========================== -->
+    <header class="header">
+
+        <div class="container header-container">
+
+            <!-- Logo -->
+            <a href="index.html" class="logo">
+                <span class="logo-icon">
+                    <i class="bx bx-cross"></i>
+                </span>
+
+                <span class="logo-text">
+                    <strong>Cristo Vive</strong>
+                    <small>Sullana</small>
+                </span>
+            </a>
+
+            <!-- Botón menú móvil -->
+            <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú">
+                <i class="bx bx-menu"></i>
+            </button>
+
+            <!-- Navegación -->
+            <nav class="nav" id="nav">
+
+                <a href="index.html" class="nav-link active">
+                    <i class="bx bx-home"></i>
+                    Inicio
+                </a>
+
+                <a href="videos.html" class="nav-link">
+                    <i class="bx bx-video"></i>
+                    Videos
+                </a>
+
+                <a href="reflexiones.html" class="nav-link">
+                    <i class="bx bx-book-open"></i>
+                    Reflexiones
+                </a>
+
+                <a href="estudios.html" class="nav-link">
+                    <i class="bx bx-book"></i>
+                    Estudios
+                </a>
+
+                <a href="sermones.html" class="nav-link">
+                    <i class="bx bx-microphone"></i>
+                    Sermones
+                </a>
+
+                <a href="sobre-mi.html" class="nav-link">
+                    <i class="bx bx-user"></i>
+                    Nosotros
+                </a>
+
+                <a href="contacto.html" class="nav-link">
+                    <i class="bx bx-envelope"></i>
+                    Contacto
+                </a>
+
+            </nav>
+
+        </div>
+
+    </header>
+
+
+    <main>
+
+        <!-- =========================
+             HERO
+        ========================== -->
+        <section class="hero">
+
+            <div class="container hero-container">
+
+                <div class="hero-content">
+
+                    <span class="hero-subtitle">
+                        ✝ Un espacio de fe y esperanza
+                    </span>
+
+                    <h1>
+                        Cristo Vive
+                        <span>– Sullana</span>
+                    </h1>
+
+                    <p>
+                        Compartiendo la Palabra de Dios, reflexiones,
+                        sermones y enseñanzas para fortalecer nuestra fe
+                        y acercarnos cada día más a Jesucristo.
+                    </p>
+
+                    <div class="hero-buttons">
+
+                        <a href="videos.html" class="btn btn-primary">
+                            <i class="bx bx-play"></i>
+                            Ver nuestros videos
+                        </a>
+
+                        <a href="#destacado" class="btn btn-secondary">
+                            Conocer más
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             VIDEO DESTACADO
+        ========================== -->
+        <section class="featured section" id="destacado">
+
+            <div class="container">
+
+                <div class="section-heading">
+
+                    <span class="section-subtitle">
+                        Nuestro mensaje
+                    </span>
+
+                    <h2>
+                        Video destacado
+                    </h2>
+
+                    <p>
+                        Una palabra de Dios para fortalecer tu vida.
+                    </p>
+
+                </div>
+
+
+                <div class="featured-video">
+
+                    <!--
+                        MÁS ADELANTE COLOCAREMOS AQUÍ
+                        EL ID REAL DE TU VIDEO DE YOUTUBE.
+
+                        Ejemplo:
+
+                        https://www.youtube.com/watch?v=ABC123
+
+                        El ID sería:
+
+                        ABC123
+                    -->
+
+                    <div class="video-placeholder">
+
+                        <i class="bx bxl-youtube"></i>
+
+                        <h3>
+                            Nuestro próximo video
+                        </h3>
+
+                        <p>
+                            Aquí aparecerá nuestro video destacado de YouTube.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- =========================
+     LECTURA DEL DÍA
+========================== -->
+
+<section class="daily-reading section">
+
+    <div class="container">
+
+        <div class="section-heading">
+
+            <span class="section-subtitle">
+                Palabra de Dios
+            </span>
+
+            <h2>
+                Lectura del día
+            </h2>
+
+            <p>
+                Una lectura para meditar y fortalecer nuestra fe.
+            </p>
+
+        </div>
+
+
+        <div class="videos-grid" id="lecturasContainer">
+
+            <!-- Las lecturas aparecerán aquí mediante JavaScript -->
+
+        </div>
+
+    </div>
+
+</section>
+
+
+        <!-- =========================
+             ÚLTIMOS VIDEOS
+        ========================== -->
+        <section class="videos section">
+
+            <div class="container">
+
+                <div class="section-heading">
+
+                    <span class="section-subtitle">
+                        YouTube
+                    </span>
+
+                    <h2>
+                        Últimos videos
+                    </h2>
+
+                    <p>
+                        Mira nuestras últimas enseñanzas,
+                        reflexiones y sermones.
+                    </p>
+
+                </div>
+
+
+                <div class="videos-grid" id="videosContainer">
+
+                    <!--
+                        Los videos serán generados
+                        automáticamente mediante JavaScript.
+                    -->
+
+                </div>
+
+
+                <div class="section-button">
+
+                    <a href="videos.html" class="btn btn-primary">
+                        Ver todos los videos
+                        <i class="bx bx-right-arrow-alt"></i>
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             REFLEXIONES
+        ========================== -->
+        <section class="reflections section">
+
+            <div class="container">
+
+                <div class="section-heading">
+
+                    <span class="section-subtitle">
+                        Meditación
+                    </span>
+
+                    <h2>
+                        Reflexiones para tu vida
+                    </h2>
+
+                    <p>
+                        Palabras que nos ayudan a meditar en Dios
+                        y aplicar su Palabra a nuestra vida diaria.
+                    </p>
+
+                </div>
+
+
+                <div class="reflection-grid">
+
+                    <article class="reflection-card">
+
+                        <div class="reflection-icon">
+                            <i class="bx bx-book-open"></i>
+                        </div>
+
+                        <div class="reflection-content">
+
+                            <span>
+                                Vida cristiana
+                            </span>
+
+                            <h3>
+                                Caminar por fe
+                            </h3>
+
+                            <p>
+                                Una reflexión sobre la importancia
+                                de confiar en Dios aun cuando no
+                                podemos ver el camino.
+                            </p>
+
+                            <a href="reflexiones.html">
+                                Leer reflexión
+                                <i class="bx bx-right-arrow-alt"></i>
+                            </a>
+
+                        </div>
+
+                    </article>
+
+
+                    <article class="reflection-card">
+
+                        <div class="reflection-icon">
+                            <i class="bx bx-heart"></i>
+                        </div>
+
+                        <div class="reflection-content">
+
+                            <span>
+                                Fe
+                            </span>
+
+                            <h3>
+                                Cuando Dios parece guardar silencio
+                            </h3>
+
+                            <p>
+                                Aprendiendo a confiar en Dios
+                                incluso durante los momentos
+                                difíciles.
+                            </p>
+
+                            <a href="reflexiones.html">
+                                Leer reflexión
+                                <i class="bx bx-right-arrow-alt"></i>
+                            </a>
+
+                        </div>
+
+                    </article>
+
+
+                    <article class="reflection-card">
+
+                        <div class="reflection-icon">
+                            <i class="bx bx-sun"></i>
+                        </div>
+
+                        <div class="reflection-content">
+
+                            <span>
+                                Esperanza
+                            </span>
+
+                            <h3>
+                                Dios todavía tiene un propósito
+                            </h3>
+
+                            <p>
+                                Una palabra de esperanza para
+                                quienes están atravesando
+                                momentos difíciles.
+                            </p>
+
+                            <a href="reflexiones.html">
+                                Leer reflexión
+                                <i class="bx bx-right-arrow-alt"></i>
+                            </a>
+
+                        </div>
+
+                    </article>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             LLAMADO
+        ========================== -->
+        <section class="cta">
+
+            <div class="container cta-container">
+
+                <div class="cta-content">
+
+                    <span>
+                        Cristo vive
+                    </span>
+
+                    <h2>
+                        La Palabra de Dios sigue transformando vidas.
+                    </h2>
+
+                    <p>
+                        Acompáñanos en este camino de fe y comparte
+                        este mensaje con otras personas.
+                    </p>
+
+                </div>
+
+                <a href="videos.html" class="btn btn-light">
+                    Ver videos
+                    <i class="bx bx-play"></i>
+                </a>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =========================
+         FOOTER
+    ========================== -->
+    <footer class="footer">
+
+        <div class="container footer-container">
+
+            <div class="footer-brand">
+
+                <a href="index.html" class="logo">
+
+                    <span class="logo-icon">
+                        <i class="bx bx-cross"></i>
+                    </span>
+
+                    <span class="logo-text">
+                        <strong>Cristo Vive</strong>
+                        <small>Sullana</small>
+                    </span>
+
+                </a>
+
+                <p>
+                    Compartiendo la Palabra de Dios
+                    y llevando un mensaje de esperanza.
+                </p>
+
+            </div>
+
+
+            <div class="footer-links">
+
+                <h3>
+                    Enlaces
+                </h3>
+
+                <a href="index.html">Inicio</a>
+                <a href="videos.html">Videos</a>
+                <a href="reflexiones.html">Reflexiones</a>
+                <a href="estudios.html">Estudios Bíblicos</a>
+
+            </div>
+
+
+            <div class="footer-social">
+
+                <h3>
+                    Síguenos
+                </h3>
+
+                <div class="social-links">
+
+                    <a href="#" aria-label="YouTube">
+                        <i class="bx bxl-youtube"></i>
+                    </a>
+
+                    <a href="#" aria-label="Facebook">
+                        <i class="bx bxl-facebook"></i>
+                    </a>
+
+                    <a href="#" aria-label="Instagram">
+                        <i class="bx bxl-instagram"></i>
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="footer-bottom">
+
+            <p>
+                © 2026 Cristo Vive – Sullana.
+                Todos los derechos reservados.
+            </p>
+
+        </div>
+
+    </footer>
+
+
+    <!-- JavaScript -->
+    <script src="js/main.js"></script>
+    <script src="js/lecturas.js"></script>
+</body>
+
+</html>
+
