@@ -1,8 +1,13 @@
 /* =========================================================
    CRISTO VIVE – SULLANA
    PANEL DE ADMINISTRACIÓN
+   CONEXIÓN CON SUPABASE
 ========================================================= */
 
+
+/* =========================================================
+   ELEMENTOS PRINCIPALES
+========================================================= */
 
 const adminMes = document.getElementById("adminMes");
 const adminDia = document.getElementById("adminDia");
@@ -14,16 +19,26 @@ const adminMessage = document.getElementById("adminMessage");
 
 
 /* =========================================================
-   ELEMENTOS DE LAS LECTURAS
+   LECTURA 1
 ========================================================= */
 
 const referencia1 = document.getElementById("referencia1");
 const version1 = document.getElementById("version1");
 const texto1 = document.getElementById("texto1");
 
+
+/* =========================================================
+   LECTURA 2
+========================================================= */
+
 const referencia2 = document.getElementById("referencia2");
 const version2 = document.getElementById("version2");
 const texto2 = document.getElementById("texto2");
+
+
+/* =========================================================
+   LECTURA 3
+========================================================= */
 
 const referencia3 = document.getElementById("referencia3");
 const version3 = document.getElementById("version3");
@@ -62,6 +77,14 @@ const contenidoMeditacion =
 
 
 /* =========================================================
+   VARIABLES
+========================================================= */
+
+let programacionActual = null;
+let contenidoActual = null;
+
+
+/* =========================================================
    MOSTRAR MENSAJE
 ========================================================= */
 
@@ -71,7 +94,33 @@ function mostrarMensaje(texto, tipo = "success") {
 
     adminMessage.className =
         `admin-message ${tipo}`;
+}
 
+
+/* =========================================================
+   COMPROBAR SUPABASE
+========================================================= */
+
+function comprobarSupabase() {
+
+    if (
+        typeof supabaseClient === "undefined" ||
+        !supabaseClient
+    ) {
+
+        mostrarMensaje(
+            "No se pudo conectar con Supabase.",
+            "error"
+        );
+
+        console.error(
+            "supabaseClient no está disponible."
+        );
+
+        return false;
+    }
+
+    return true;
 }
 
 
@@ -102,40 +151,209 @@ function limpiarFormulario() {
     agradecimiento.value = "";
     contenidoMeditacion.value = "";
 
+    programacionActual = null;
+    contenidoActual = null;
 }
 
 
 /* =========================================================
-   BUSCAR DÍA
+   BUSCAR PROGRAMACIÓN EN SUPABASE
 ========================================================= */
 
-function buscarDia() {
+async function buscarProgramacion() {
+
+    if (!comprobarSupabase()) {
+        return null;
+    }
 
     const mes = adminMes.value;
     const dia = Number(adminDia.value);
 
-    if (
-        typeof contenidoLecturas === "undefined"
-    ) {
+    try {
+
+        const { data, error } = await supabaseClient
+            .from("programacion_lecturas")
+            .select("*")
+            .eq("mes", mes)
+            .eq("dia", dia)
+            .maybeSingle();
+
+
+        if (error) {
+
+            console.error(
+                "Error buscando programación:",
+                error
+            );
+
+            mostrarMensaje(
+                "No se pudo consultar la programación.",
+                "error"
+            );
+
+            return null;
+        }
+
+
+        return data;
+
+    } catch (error) {
+
+        console.error(
+            "Error inesperado:",
+            error
+        );
 
         mostrarMensaje(
-            "No se encontró la base de contenido.",
+            "Ocurrió un error al consultar Supabase.",
             "error"
         );
 
         return null;
     }
+}
 
 
-    return contenidoLecturas.find(function (lectura) {
+/* =========================================================
+   BUSCAR CONTENIDO EN SUPABASE
+========================================================= */
 
-        return (
-            lectura.mes === mes &&
-            lectura.dia === dia
+async function buscarContenido(programacionId) {
+
+    if (!programacionId) {
+        return null;
+    }
+
+    try {
+
+        const { data, error } = await supabaseClient
+            .from("contenido_lecturas")
+            .select("*")
+            .eq("programacion_id", programacionId)
+            .maybeSingle();
+
+
+        if (error) {
+
+            console.error(
+                "Error buscando contenido:",
+                error
+            );
+
+            mostrarMensaje(
+                "No se pudo consultar el contenido.",
+                "error"
+            );
+
+            return null;
+        }
+
+
+        return data;
+
+    } catch (error) {
+
+        console.error(
+            "Error inesperado:",
+            error
         );
 
-    }) || null;
+        mostrarMensaje(
+            "Ocurrió un error al consultar el contenido.",
+            "error"
+        );
 
+        return null;
+    }
+}
+
+
+/* =========================================================
+   CARGAR PROGRAMACIÓN EN EL FORMULARIO
+========================================================= */
+
+function cargarProgramacion(programacion) {
+
+    if (!programacion) {
+        return;
+    }
+
+    referencia1.value =
+        programacion.referencia_1 || "";
+
+    version1.value =
+        programacion.version_1 || "RVR1960";
+
+
+    referencia2.value =
+        programacion.referencia_2 || "";
+
+    version2.value =
+        programacion.version_2 || "RVR1960";
+
+
+    referencia3.value =
+        programacion.referencia_3 || "";
+
+    version3.value =
+        programacion.version_3 || "RVR1960";
+}
+
+
+/* =========================================================
+   CARGAR CONTENIDO EN EL FORMULARIO
+========================================================= */
+
+function cargarContenido(contenido) {
+
+    if (!contenido) {
+        return;
+    }
+
+
+    /* -----------------------------------------
+       TEXTOS BÍBLICOS
+    ----------------------------------------- */
+
+    texto1.value =
+        contenido.texto_1 || "";
+
+    texto2.value =
+        contenido.texto_2 || "";
+
+    texto3.value =
+        contenido.texto_3 || "";
+
+
+    /* -----------------------------------------
+       VIDEO
+    ----------------------------------------- */
+
+    videoDisponible.checked =
+        Boolean(contenido.video_disponible);
+
+    youtubeId.value =
+        contenido.youtube_id || "";
+
+
+    /* -----------------------------------------
+       MEDITACIÓN
+    ----------------------------------------- */
+
+    meditacionDisponible.checked =
+        Boolean(contenido.meditacion_disponible);
+
+    autorMeditacion.value =
+        contenido.colaborador || "";
+
+    fechaMeditacion.value =
+        contenido.fecha_publicacion || "";
+
+    agradecimiento.value =
+        contenido.agradecimiento || "";
+
+    contenidoMeditacion.value =
+        contenido.meditacion_contenido || "";
 }
 
 
@@ -143,18 +361,28 @@ function buscarDia() {
    CARGAR DÍA
 ========================================================= */
 
-function cargarDia() {
+async function cargarDia() {
 
     limpiarFormulario();
 
+    mostrarMensaje(
+        "Cargando información...",
+        "success"
+    );
 
-    const lectura = buscarDia();
+
+    /* -----------------------------------------
+       BUSCAR PROGRAMACIÓN
+    ----------------------------------------- */
+
+    const programacion =
+        await buscarProgramacion();
 
 
-    if (!lectura) {
+    if (!programacion) {
 
         mostrarMensaje(
-            "No existe contenido para este día.",
+            "No existe programación para este día.",
             "error"
         );
 
@@ -162,288 +390,192 @@ function cargarDia() {
     }
 
 
-    /* ==============================================
-       LECTURAS
-    ============================================== */
+    programacionActual =
+        programacion;
 
-    if (lectura.programacion[0]) {
 
-        referencia1.value =
-            lectura.programacion[0].referencia;
+    /* -----------------------------------------
+       MOSTRAR LAS CITAS
+    ----------------------------------------- */
 
-        version1.value =
-            lectura.programacion[0].version;
+    cargarProgramacion(
+        programacion
+    );
 
-        texto1.value =
-            lectura.programacion[0].texto || "";
 
+    /* -----------------------------------------
+       BUSCAR CONTENIDO
+    ----------------------------------------- */
+
+    const contenido =
+        await buscarContenido(
+            programacion.id
+        );
+
+
+    if (contenido) {
+
+        contenidoActual =
+            contenido;
+
+        cargarContenido(
+            contenido
+        );
+
+        mostrarMensaje(
+            `Contenido del ${programacion.dia} de ${programacion.mes} cargado correctamente.`,
+            "success"
+        );
+
+    } else {
+
+        mostrarMensaje(
+            `El ${programacion.dia} de ${programacion.mes} está disponible para agregar contenido.`,
+            "success"
+        );
+    }
+}
+
+
+/* =========================================================
+   GUARDAR CAMBIOS
+========================================================= */
+
+async function guardarCambios() {
+
+    if (!comprobarSupabase()) {
+        return;
     }
 
 
-    if (lectura.programacion[1]) {
+    /* -----------------------------------------
+       COMPROBAR PROGRAMACIÓN
+    ----------------------------------------- */
 
-        referencia2.value =
-            lectura.programacion[1].referencia;
+    if (!programacionActual) {
 
-        version2.value =
-            lectura.programacion[1].version;
+        mostrarMensaje(
+            "Primero carga un día con programación.",
+            "error"
+        );
 
-        texto2.value =
-            lectura.programacion[1].texto || "";
-
-    }
-
-
-    if (lectura.programacion[2]) {
-
-        referencia3.value =
-            lectura.programacion[2].referencia;
-
-        version3.value =
-            lectura.programacion[2].version;
-
-        texto3.value =
-            lectura.programacion[2].texto || "";
-
-    }
-
-
-    /* ==============================================
-       VIDEO
-    ============================================== */
-
-    if (lectura.video) {
-
-        videoDisponible.checked =
-            lectura.video.disponible;
-
-        youtubeId.value =
-            lectura.video.youtubeId || "";
-
-    }
-
-
-    /* ==============================================
-       MEDITACIÓN
-    ============================================== */
-
-    if (lectura.meditacion) {
-
-        meditacionDisponible.checked =
-            lectura.meditacion.disponible;
-
-        autorMeditacion.value =
-            lectura.meditacion.autor || "";
-
-        contenidoMeditacion.value =
-            lectura.meditacion.contenido || "";
-
-        agradecimiento.value =
-            lectura.meditacion.agradecimiento || "";
-
-
-        /*
-           La fecha se convertirá posteriormente
-           al formato del input date.
-        */
-
-        if (
-            lectura.meditacion.fechaPublicacion
-        ) {
-
-            const fecha =
-                convertirFechaParaInput(
-                    lectura.meditacion.fechaPublicacion
-                );
-
-            fechaMeditacion.value =
-                fecha;
-
-        }
-
+        return;
     }
 
 
     mostrarMensaje(
-        `Contenido del ${lectura.dia} de ${lectura.mes} cargado correctamente.`,
+        "Guardando cambios...",
         "success"
     );
 
-}
 
-
-/* =========================================================
-   CONVERTIR FECHA
-========================================================= */
-
-function convertirFechaParaInput(fecha) {
-
-    if (!fecha) {
-        return "";
-    }
-
-
-    const partes =
-        fecha.split(" de ");
-
-
-    if (partes.length !== 2) {
-        return "";
-    }
-
-
-    const dia =
-        partes[0].padStart(2, "0");
-
-
-    const partesMes =
-        partes[1].split(" ");
-
-
-    if (partesMes.length !== 2) {
-        return "";
-    }
-
-
-    const mesNombre =
-        partesMes[0].toLowerCase();
-
-    const año =
-        partesMes[1];
-
-
-    const meses = {
-
-        enero: "01",
-        febrero: "02",
-        marzo: "03",
-        abril: "04",
-        mayo: "05",
-        junio: "06",
-        julio: "07",
-        agosto: "08",
-        septiembre: "09",
-        octubre: "10",
-        noviembre: "11",
-        diciembre: "12"
-
-    };
-
-
-    const mes =
-        meses[mesNombre];
-
-
-    if (!mes) {
-        return "";
-    }
-
-
-    return `${año}-${mes}-${dia}`;
-
-}
-
-
-/* =========================================================
-   GUARDAR
-========================================================= */
-
-function guardarCambios() {
-
-    const lectura = buscarDia();
-
-
-    if (!lectura) {
-
-        mostrarMensaje(
-            "No existe este día en contenido.js.",
-            "error"
-        );
-
-        return;
-    }
-
-
-    /*
-       Por ahora solamente mostramos una
-       vista previa de los datos.
-
-       En el siguiente paso conectaremos
-       el almacenamiento.
-    */
-
+    /* -----------------------------------------
+       PREPARAR DATOS
+    ----------------------------------------- */
 
     const datos = {
 
-        dia: lectura.dia,
+        programacion_id:
+            programacionActual.id,
 
-        mes: lectura.mes,
+        texto_1:
+            texto1.value.trim(),
 
-        programacion: [
+        texto_2:
+            texto2.value.trim(),
 
-            {
-                referencia: referencia1.value,
-                version: version1.value,
-                texto: texto1.value
-            },
+        texto_3:
+            texto3.value.trim(),
 
-            {
-                referencia: referencia2.value,
-                version: version2.value,
-                texto: texto2.value
-            },
+        video_disponible:
+            videoDisponible.checked,
 
-            {
-                referencia: referencia3.value,
-                version: version3.value,
-                texto: texto3.value
-            }
+        youtube_id:
+            youtubeId.value.trim(),
 
-        ],
+        meditacion_disponible:
+            meditacionDisponible.checked,
 
-        video: {
+        meditacion_contenido:
+            contenidoMeditacion.value.trim(),
 
-            disponible:
-                videoDisponible.checked,
+        colaborador:
+            autorMeditacion.value.trim(),
 
-            youtubeId:
-                youtubeId.value.trim()
+        fecha_publicacion:
+            fechaMeditacion.value || null,
 
-        },
+        agradecimiento:
+            agradecimiento.value.trim(),
 
-        meditacion: {
-
-            disponible:
-                meditacionDisponible.checked,
-
-            autor:
-                autorMeditacion.value.trim(),
-
-            fechaPublicacion:
-                fechaMeditacion.value,
-
-            agradecimiento:
-                agradecimiento.value.trim(),
-
-            contenido:
-                contenidoMeditacion.value
-
-        }
-
+        updated_at:
+            new Date().toISOString()
     };
 
 
-    console.log(
-        "Datos preparados para guardar:",
-        datos
-    );
+    /* -----------------------------------------
+       INSERTAR / ACTUALIZAR
+    ----------------------------------------- */
+
+    try {
+
+        const { data, error } =
+            await supabaseClient
+                .from("contenido_lecturas")
+                .upsert(
+                    datos,
+                    {
+                        onConflict: "programacion_id"
+                    }
+                )
+                .select()
+                .single();
 
 
-    mostrarMensaje(
-        "Datos preparados correctamente. Todavía no se han guardado en la página.",
-        "success"
-    );
+        if (error) {
 
+            console.error(
+                "Error guardando:",
+                error
+            );
+
+            mostrarMensaje(
+                "No se pudieron guardar los cambios.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        contenidoActual =
+            data;
+
+
+        mostrarMensaje(
+            "✅ Cambios guardados correctamente en Supabase.",
+            "success"
+        );
+
+
+        console.log(
+            "Contenido guardado:",
+            data
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Error inesperado:",
+            error
+        );
+
+        mostrarMensaje(
+            "Ocurrió un error al guardar.",
+            "error"
+        );
+    }
 }
 
 
@@ -464,7 +596,7 @@ btnGuardar.addEventListener(
 
 
 /* =========================================================
-   CAMBIAR AUTOMÁTICAMENTE AL SELECCIONAR OTRO DÍA
+   CAMBIAR AUTOMÁTICAMENTE DE DÍA
 ========================================================= */
 
 adminDia.addEventListener(
@@ -478,4 +610,13 @@ adminMes.addEventListener(
     cargarDia
 );
 
-cargarDia();
+
+/* =========================================================
+   INICIO
+========================================================= */
+
+if (comprobarSupabase()) {
+
+    cargarDia();
+
+}
