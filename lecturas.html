@@ -5,7 +5,10 @@
 
     <meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <meta
         name="description"
@@ -14,7 +17,10 @@
 
     <title>Lecturas diarias | Cristo Vive – Sullana</title>
 
-    <link rel="stylesheet" href="css/estilos.css">
+    <link
+        rel="stylesheet"
+        href="css/estilos.css"
+    >
 
     <link
         href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
@@ -38,7 +44,10 @@
 
             <!-- LOGO -->
 
-            <a href="index.html" class="logo">
+            <a
+                href="index.html"
+                class="logo"
+            >
 
                 <span class="logo-icon">
                     <i class="bx bx-cross"></i>
@@ -70,9 +79,15 @@
 
             <!-- NAVEGACIÓN -->
 
-            <nav class="nav" id="nav">
+            <nav
+                class="nav"
+                id="nav"
+            >
 
-                <a href="index.html" class="nav-link">
+                <a
+                    href="index.html"
+                    class="nav-link"
+                >
 
                     <i class="bx bx-home"></i>
 
@@ -93,7 +108,10 @@
                 </a>
 
 
-                <a href="videos.html" class="nav-link">
+                <a
+                    href="videos.html"
+                    class="nav-link"
+                >
 
                     <i class="bx bx-video"></i>
 
@@ -102,7 +120,10 @@
                 </a>
 
 
-                <a href="reflexiones.html" class="nav-link">
+                <a
+                    href="reflexiones.html"
+                    class="nav-link"
+                >
 
                     <i class="bx bx-heart"></i>
 
@@ -111,7 +132,10 @@
                 </a>
 
 
-                <a href="estudios.html" class="nav-link">
+                <a
+                    href="estudios.html"
+                    class="nav-link"
+                >
 
                     <i class="bx bx-book"></i>
 
@@ -120,7 +144,10 @@
                 </a>
 
 
-                <a href="sermones.html" class="nav-link">
+                <a
+                    href="sermones.html"
+                    class="nav-link"
+                >
 
                     <i class="bx bx-microphone"></i>
 
@@ -129,7 +156,10 @@
                 </a>
 
 
-                <a href="sobre-mi.html" class="nav-link">
+                <a
+                    href="sobre-mi.html"
+                    class="nav-link"
+                >
 
                     <i class="bx bx-user"></i>
 
@@ -138,7 +168,10 @@
                 </a>
 
 
-                <a href="contacto.html" class="nav-link">
+                <a
+                    href="contacto.html"
+                    class="nav-link"
+                >
 
                     <i class="bx bx-envelope"></i>
 
@@ -213,6 +246,8 @@
                 <div class="selectors">
 
 
+                    <!-- MES -->
+
                     <div class="selector-group">
 
                         <label for="mesSelect">
@@ -221,14 +256,14 @@
 
                         <select id="mesSelect">
 
-                            <option value="agosto">
-                                Agosto
-                            </option>
+                            <!-- JavaScript cargará los meses -->
 
                         </select>
 
                     </div>
 
+
+                    <!-- DÍA -->
 
                     <div class="selector-group">
 
@@ -238,17 +273,7 @@
 
                         <select id="diaSelect">
 
-                            <option value="12">
-                                12 de agosto
-                            </option>
-
-                            <option value="13">
-                                13 de agosto
-                            </option>
-
-                            <option value="14">
-                                14 de agosto
-                            </option>
+                            <!-- JavaScript cargará los días -->
 
                         </select>
 
@@ -299,7 +324,10 @@
 
             <div class="footer-brand">
 
-                <a href="index.html" class="logo">
+                <a
+                    href="index.html"
+                    class="logo"
+                >
 
                     <span class="logo-icon">
                         <i class="bx bx-cross"></i>
@@ -408,11 +436,21 @@
 
     <script src="js/main.js"></script>
 
+    <!-- Supabase -->
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="js/supabase.js"></script>
+
+    <!-- Base anterior: se mantiene porque puede contener
+         contenido local de agosto -->
+
     <script src="js/contenido.js"></script>
+
+    <!-- Lecturas desde Supabase -->
 
     <script src="js/mostrarLecturas.js"></script>
 
 </body>
 
 </html>
-```

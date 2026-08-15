@@ -1,6 +1,7 @@
 /* =========================================================
    CRISTO VIVE – SULLANA
    MOSTRAR LECTURAS DIARIAS
+   DATOS DESDE SUPABASE
 ========================================================= */
 
 
@@ -8,128 +9,703 @@
    ELEMENTOS DE LA PÁGINA
 ========================================================= */
 
-const mesSelect = document.getElementById("mesSelect");
-const diaSelect = document.getElementById("diaSelect");
-const readingContent = document.getElementById("readingContent");
+const mesSelect =
+    document.getElementById("mesSelect");
+
+const diaSelect =
+    document.getElementById("diaSelect");
+
+const readingContent =
+    document.getElementById("readingContent");
 
 
 /* =========================================================
-   BUSCAR LECTURA
+   CONFIGURACIÓN
 ========================================================= */
 
-function buscarLectura() {
+const nombresMeses = {
 
-    if (!mesSelect || !diaSelect || typeof contenidoLecturas === "undefined") {
-        return null;
-    }
+    enero: "Enero",
 
-    const mes = mesSelect.value;
-    const dia = Number(diaSelect.value);
+    febrero: "Febrero",
 
-    return contenidoLecturas.find(function (item) {
+    marzo: "Marzo",
 
-        return (
-            item.mes === mes &&
-            item.dia === dia
+    abril: "Abril",
+
+    mayo: "Mayo",
+
+    junio: "Junio",
+
+    julio: "Julio",
+
+    agosto: "Agosto",
+
+    septiembre: "Septiembre",
+
+    octubre: "Octubre",
+
+    noviembre: "Noviembre",
+
+    diciembre: "Diciembre"
+
+};
+
+
+/* =========================================================
+   COMPROBAR SUPABASE
+========================================================= */
+
+function comprobarSupabase() {
+
+    if (
+        typeof supabaseClient === "undefined" ||
+        !supabaseClient
+    ) {
+
+        console.error(
+            "supabaseClient no está disponible."
         );
 
-    }) || null;
+        mostrarMensajeError(
+            "No se pudo conectar con Supabase."
+        );
+
+        return false;
+    }
+
+    return true;
 }
 
 
 /* =========================================================
-   MOSTRAR PROGRAMACIÓN
+   MENSAJE DE ERROR
 ========================================================= */
 
-function crearProgramacion(lectura) {
+function mostrarMensajeError(mensaje) {
 
-    const contenedor = document.createElement("section");
+    if (!readingContent) {
+        return;
+    }
 
-    contenedor.classList.add("reading-section");
+    readingContent.innerHTML = "";
+
+    const contenedor =
+        document.createElement("div");
+
+    contenedor.classList.add(
+        "reading-not-found"
+    );
 
     contenedor.innerHTML = `
-        <h2>📚 Programación del día</h2>
+
+        <i class="bx bx-error-circle"></i>
+
+        <h2>
+            Ocurrió un problema
+        </h2>
+
+        <p>
+            ${mensaje}
+        </p>
+
     `;
 
-    const lista = document.createElement("div");
+    readingContent.appendChild(
+        contenedor
+    );
+}
 
-    lista.classList.add("reading-references");
 
-    lectura.programacion.forEach(function (texto) {
+/* =========================================================
+   CARGAR MESES DESDE SUPABASE
+========================================================= */
 
-        const referencia = document.createElement("div");
+async function cargarMeses() {
 
-        referencia.classList.add("reading-reference");
+    if (!comprobarSupabase()) {
+        return;
+    }
 
-        referencia.innerHTML = `
-            <h3>${texto.referencia}</h3>
-            <span class="bible-version">
-                ${texto.version}
-            </span>
-        `;
+    try {
 
-        lista.appendChild(referencia);
+        const { data, error } =
+            await supabaseClient
 
-    });
+                .from("programacion_lecturas")
 
-    contenedor.appendChild(lista);
+                .select("mes")
+
+                .order("mes");
+
+
+        if (error) {
+
+            console.error(
+                "Error cargando meses:",
+                error
+            );
+
+            mostrarMensajeError(
+                "No se pudieron cargar los meses."
+            );
+
+            return;
+        }
+
+
+        /* Obtener meses únicos */
+
+        const mesesUnicos = [
+            ...new Set(
+                data.map(
+                    item => item.mes
+                )
+            )
+        ];
+
+
+        /* Orden correcto de los meses */
+
+        const ordenMeses = [
+
+            "enero",
+            "febrero",
+            "marzo",
+            "abril",
+            "mayo",
+            "junio",
+            "julio",
+            "agosto",
+            "septiembre",
+            "octubre",
+            "noviembre",
+            "diciembre"
+
+        ];
+
+
+        mesesUnicos.sort(
+            (a, b) =>
+                ordenMeses.indexOf(a) -
+                ordenMeses.indexOf(b)
+        );
+
+
+        /* Limpiar selector */
+
+        mesSelect.innerHTML = "";
+
+
+        /* Crear opciones */
+
+        mesesUnicos.forEach(
+            function (mes) {
+
+                const opcion =
+                    document.createElement(
+                        "option"
+                    );
+
+                opcion.value = mes;
+
+                opcion.textContent =
+                    nombresMeses[mes] ||
+                    mes;
+
+                mesSelect.appendChild(
+                    opcion
+                );
+
+            }
+        );
+
+
+        if (mesesUnicos.length === 0) {
+
+            mostrarMensajeError(
+                "Todavía no hay programaciones disponibles."
+            );
+
+            return;
+        }
+
+
+        /*
+           Seleccionar agosto si existe.
+           Así mantenemos el comportamiento
+           que ya tenía la página.
+        */
+
+        if (
+            mesesUnicos.includes("agosto")
+        ) {
+
+            mesSelect.value =
+                "agosto";
+
+        } else {
+
+            mesSelect.value =
+                mesesUnicos[0];
+
+        }
+
+
+        await cargarDias();
+
+
+    } catch (error) {
+
+        console.error(
+            "Error inesperado cargando meses:",
+            error
+        );
+
+        mostrarMensajeError(
+            "Ocurrió un error al cargar los meses."
+        );
+
+    }
+}
+
+
+/* =========================================================
+   CARGAR DÍAS DEL MES
+========================================================= */
+
+async function cargarDias() {
+
+    if (!comprobarSupabase()) {
+        return;
+    }
+
+    const mes =
+        mesSelect.value;
+
+
+    if (!mes) {
+        return;
+    }
+
+
+    try {
+
+        const { data, error } =
+            await supabaseClient
+
+                .from("programacion_lecturas")
+
+                .select("dia")
+
+                .eq("mes", mes)
+
+                .order("dia");
+
+
+        if (error) {
+
+            console.error(
+                "Error cargando días:",
+                error
+            );
+
+            mostrarMensajeError(
+                "No se pudieron cargar los días."
+            );
+
+            return;
+        }
+
+
+        /* Limpiar selector */
+
+        diaSelect.innerHTML = "";
+
+
+        /* Crear días */
+
+        data.forEach(
+            function (item) {
+
+                const opcion =
+                    document.createElement(
+                        "option"
+                    );
+
+                opcion.value =
+                    item.dia;
+
+                opcion.textContent =
+                    `${item.dia} de ${
+                        nombresMeses[mes] || mes
+                    }`;
+
+                diaSelect.appendChild(
+                    opcion
+                );
+
+            }
+        );
+
+
+        if (data.length === 0) {
+
+            mostrarMensajeError(
+                `No hay programaciones para ${nombresMeses[mes] || mes}.`
+            );
+
+            return;
+        }
+
+
+        /*
+           Seleccionamos el primer día
+           disponible.
+        */
+
+        diaSelect.value =
+            data[0].dia;
+
+
+        await mostrarLectura();
+
+    } catch (error) {
+
+        console.error(
+            "Error inesperado cargando días:",
+            error
+        );
+
+        mostrarMensajeError(
+            "Ocurrió un error al cargar los días."
+        );
+
+    }
+}
+
+
+/* =========================================================
+   BUSCAR PROGRAMACIÓN
+========================================================= */
+
+async function buscarProgramacion() {
+
+    if (!comprobarSupabase()) {
+        return null;
+    }
+
+    const mes =
+        mesSelect.value;
+
+    const dia =
+        Number(diaSelect.value);
+
+
+    try {
+
+        const { data, error } =
+            await supabaseClient
+
+                .from("programacion_lecturas")
+
+                .select("*")
+
+                .eq("mes", mes)
+
+                .eq("dia", dia)
+
+                .maybeSingle();
+
+
+        if (error) {
+
+            console.error(
+                "Error buscando programación:",
+                error
+            );
+
+            return null;
+        }
+
+
+        return data;
+
+    } catch (error) {
+
+        console.error(
+            "Error inesperado buscando programación:",
+            error
+        );
+
+        return null;
+    }
+}
+
+
+/* =========================================================
+   BUSCAR CONTENIDO
+========================================================= */
+
+async function buscarContenido(
+    programacionId
+) {
+
+    if (!programacionId) {
+        return null;
+    }
+
+
+    try {
+
+        const { data, error } =
+            await supabaseClient
+
+                .from("contenido_lecturas")
+
+                .select("*")
+
+                .eq(
+                    "programacion_id",
+                    programacionId
+                )
+
+                .maybeSingle();
+
+
+        if (error) {
+
+            console.error(
+                "Error buscando contenido:",
+                error
+            );
+
+            return null;
+        }
+
+
+        return data;
+
+    } catch (error) {
+
+        console.error(
+            "Error inesperado buscando contenido:",
+            error
+        );
+
+        return null;
+    }
+}
+
+
+/* =========================================================
+   CREAR PROGRAMACIÓN
+========================================================= */
+
+function crearProgramacion(
+    programacion
+) {
+
+    const contenedor =
+        document.createElement(
+            "section"
+        );
+
+    contenedor.classList.add(
+        "reading-section"
+    );
+
+
+    contenedor.innerHTML = `
+
+        <h2>
+            📚 Programación del día
+        </h2>
+
+    `;
+
+
+    const lista =
+        document.createElement(
+            "div"
+        );
+
+    lista.classList.add(
+        "reading-references"
+    );
+
+
+    const referencias = [
+
+        {
+            referencia:
+                programacion.referencia_1,
+
+            version:
+                programacion.version_1
+        },
+
+        {
+            referencia:
+                programacion.referencia_2,
+
+            version:
+                programacion.version_2
+        },
+
+        {
+            referencia:
+                programacion.referencia_3,
+
+            version:
+                programacion.version_3
+        }
+
+    ];
+
+
+    referencias.forEach(
+        function (texto) {
+
+            if (
+                !texto.referencia
+            ) {
+                return;
+            }
+
+
+            const referencia =
+                document.createElement(
+                    "div"
+                );
+
+            referencia.classList.add(
+                "reading-reference"
+            );
+
+
+            referencia.innerHTML = `
+
+                <h3>
+                    ${texto.referencia}
+                </h3>
+
+                <span class="bible-version">
+                    ${texto.version || "RVR1960"}
+                </span>
+
+            `;
+
+
+            lista.appendChild(
+                referencia
+            );
+
+        }
+    );
+
+
+    contenedor.appendChild(
+        lista
+    );
+
 
     return contenedor;
 }
 
 
 /* =========================================================
-   MOSTRAR VIDEO
+   CREAR VIDEO
 ========================================================= */
 
-function crearVideo(lectura) {
+function crearVideo(
+    contenido
+) {
 
-    const contenedor = document.createElement("section");
+    const contenedor =
+        document.createElement(
+            "section"
+        );
 
-    contenedor.classList.add("reading-section");
+    contenedor.classList.add(
+        "reading-section"
+    );
+
 
     contenedor.innerHTML = `
-        <h2>🎥 Lectura en video</h2>
+
+        <h2>
+            🎥 Lectura en video
+        </h2>
+
     `;
 
 
     if (
-        lectura.video &&
-        lectura.video.disponible &&
-        lectura.video.youtubeId
+        contenido &&
+        contenido.video_disponible &&
+        contenido.youtube_id
     ) {
 
-        const videoWrapper = document.createElement("div");
+        const videoWrapper =
+            document.createElement(
+                "div"
+            );
 
-        videoWrapper.classList.add("reading-video");
+        videoWrapper.classList.add(
+            "reading-video"
+        );
 
 
-        const iframe = document.createElement("iframe");
+        const iframe =
+            document.createElement(
+                "iframe"
+            );
+
 
         iframe.src =
-            `https://www.youtube.com/embed/${lectura.video.youtubeId}`;
+            `https://www.youtube.com/embed/${contenido.youtube_id}`;
 
-        iframe.title = lectura.titulo;
 
-        iframe.loading = "lazy";
+        iframe.title =
+            "Lectura bíblica";
+
+
+        iframe.loading =
+            "lazy";
+
 
         iframe.allow =
             "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
 
-        iframe.allowFullscreen = true;
+
+        iframe.allowFullscreen =
+            true;
 
 
-        videoWrapper.appendChild(iframe);
+        videoWrapper.appendChild(
+            iframe
+        );
 
-        contenedor.appendChild(videoWrapper);
+
+        contenedor.appendChild(
+            videoWrapper
+        );
 
     } else {
 
-        const pendiente = document.createElement("div");
+        const pendiente =
+            document.createElement(
+                "div"
+            );
 
-        pendiente.classList.add("video-pending");
+        pendiente.classList.add(
+            "video-pending"
+        );
+
 
         pendiente.innerHTML = `
+
             <i class="bx bx-time-five"></i>
 
             <strong>
@@ -140,9 +716,14 @@ function crearVideo(lectura) {
                 La lectura en video estará disponible
                 próximamente.
             </p>
+
         `;
 
-        contenedor.appendChild(pendiente);
+
+        contenedor.appendChild(
+            pendiente
+        );
+
     }
 
 
@@ -151,98 +732,187 @@ function crearVideo(lectura) {
 
 
 /* =========================================================
-   MOSTRAR LECTURA BÍBLICA
+   CREAR LECTURA BÍBLICA
 ========================================================= */
 
-function crearLecturaEscrita(lectura) {
+function crearLecturaEscrita(
+    programacion,
+    contenido
+) {
 
-    const contenedor = document.createElement("section");
+    const contenedor =
+        document.createElement(
+            "section"
+        );
 
-    contenedor.classList.add("reading-section");
+    contenedor.classList.add(
+        "reading-section"
+    );
+
 
     contenedor.innerHTML = `
-        <h2>📖 Lectura bíblica</h2>
+
+        <h2>
+            📖 Lectura bíblica
+        </h2>
+
     `;
 
 
-    lectura.programacion.forEach(function (texto) {
+    const textos = [
 
-        const bloque = document.createElement("article");
+        {
+            referencia:
+                programacion.referencia_1,
 
-        bloque.classList.add("bible-reading");
+            version:
+                programacion.version_1,
+
+            texto:
+                contenido
+                    ? contenido.texto_1
+                    : ""
+        },
+
+        {
+            referencia:
+                programacion.referencia_2,
+
+            version:
+                programacion.version_2,
+
+            texto:
+                contenido
+                    ? contenido.texto_2
+                    : ""
+        },
+
+        {
+            referencia:
+                programacion.referencia_3,
+
+            version:
+                programacion.version_3,
+
+            texto:
+                contenido
+                    ? contenido.texto_3
+                    : ""
+        }
+
+    ];
 
 
-        const encabezado = document.createElement("div");
+    textos.forEach(
+        function (item) {
 
-        encabezado.classList.add("bible-reading-header");
-
-
-        encabezado.innerHTML = `
-            <h3>${texto.referencia}</h3>
-
-            <span class="bible-version">
-                ${texto.version}
-            </span>
-        `;
+            if (!item.referencia) {
+                return;
+            }
 
 
-        bloque.appendChild(encabezado);
+            const bloque =
+                document.createElement(
+                    "article"
+                );
 
-
-        /* ==============================================
-           COMPROBAR SI EXISTE EL TEXTO
-        ============================================== */
-
-        if (
-            texto.texto &&
-            texto.texto.trim() !== ""
-        ) {
-
-            const contenido =
-                document.createElement("div");
-
-            contenido.classList.add(
-                "bible-text"
+            bloque.classList.add(
+                "bible-reading"
             );
 
 
-            contenido.textContent =
-                texto.texto;
+            const encabezado =
+                document.createElement(
+                    "div"
+                );
 
-
-            bloque.appendChild(contenido);
-
-        } else {
-
-            const pendiente =
-                document.createElement("div");
-
-            pendiente.classList.add(
-                "bible-text-pending"
+            encabezado.classList.add(
+                "bible-reading-header"
             );
 
 
-            pendiente.innerHTML = `
-                <i class="bx bx-book-open"></i>
+            encabezado.innerHTML = `
 
-                <strong>
-                    Lectura próximamente
-                </strong>
+                <h3>
+                    ${item.referencia}
+                </h3>
 
-                <p>
-                    El texto de esta lectura
-                    será incorporado próximamente.
-                </p>
+                <span class="bible-version">
+                    ${item.version || "RVR1960"}
+                </span>
+
             `;
 
 
-            bloque.appendChild(pendiente);
+            bloque.appendChild(
+                encabezado
+            );
+
+
+            if (
+                item.texto &&
+                item.texto.trim() !== ""
+            ) {
+
+                const contenidoTexto =
+                    document.createElement(
+                        "div"
+                    );
+
+                contenidoTexto.classList.add(
+                    "bible-text"
+                );
+
+
+                contenidoTexto.textContent =
+                    item.texto;
+
+
+                bloque.appendChild(
+                    contenidoTexto
+                );
+
+            } else {
+
+                const pendiente =
+                    document.createElement(
+                        "div"
+                    );
+
+                pendiente.classList.add(
+                    "bible-text-pending"
+                );
+
+
+                pendiente.innerHTML = `
+
+                    <i class="bx bx-book-open"></i>
+
+                    <strong>
+                        Lectura próximamente
+                    </strong>
+
+                    <p>
+                        El texto de esta lectura
+                        será incorporado próximamente.
+                    </p>
+
+                `;
+
+
+                bloque.appendChild(
+                    pendiente
+                );
+
+            }
+
+
+            contenedor.appendChild(
+                bloque
+            );
+
         }
-
-
-        contenedor.appendChild(bloque);
-
-    });
+    );
 
 
     return contenedor;
@@ -250,29 +920,41 @@ function crearLecturaEscrita(lectura) {
 
 
 /* =========================================================
-   MOSTRAR MEDITACIÓN
+   CREAR MEDITACIÓN
 ========================================================= */
 
-function crearMeditacion(lectura) {
+function crearMeditacion(
+    contenido
+) {
 
     const contenedor =
-        document.createElement("section");
+        document.createElement(
+            "section"
+        );
 
-    contenedor.classList.add("reading-section");
+    contenedor.classList.add(
+        "reading-section"
+    );
 
 
     contenedor.innerHTML = `
-        <h2>📖 Meditación</h2>
+
+        <h2>
+            📖 Meditación
+        </h2>
+
     `;
 
 
     if (
-        lectura.meditacion &&
-        lectura.meditacion.disponible
+        contenido &&
+        contenido.meditacion_disponible
     ) {
 
         const articulo =
-            document.createElement("article");
+            document.createElement(
+                "article"
+            );
 
         articulo.classList.add(
             "meditation"
@@ -281,29 +963,35 @@ function crearMeditacion(lectura) {
 
         /* CONTENIDO */
 
-        const contenido =
-            document.createElement("div");
+        const contenidoMeditacion =
+            document.createElement(
+                "div"
+            );
 
-        contenido.classList.add(
+        contenidoMeditacion.classList.add(
             "meditation-content"
         );
 
 
-        contenido.textContent =
-            lectura.meditacion.contenido;
+        contenidoMeditacion.textContent =
+            contenido.meditacion_contenido || "";
 
 
-        articulo.appendChild(contenido);
+        articulo.appendChild(
+            contenidoMeditacion
+        );
 
 
         /* AUTOR */
 
         if (
-            lectura.meditacion.autor
+            contenido.colaborador
         ) {
 
             const autor =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
             autor.classList.add(
                 "meditation-author"
@@ -311,28 +999,35 @@ function crearMeditacion(lectura) {
 
 
             autor.innerHTML = `
+
                 <strong>
                     ✍️ Preparada por:
                 </strong>
 
                 <span>
-                    ${lectura.meditacion.autor}
+                    ${contenido.colaborador}
                 </span>
+
             `;
 
 
-            articulo.appendChild(autor);
+            articulo.appendChild(
+                autor
+            );
+
         }
 
 
         /* FECHA */
 
         if (
-            lectura.meditacion.fechaPublicacion
+            contenido.fecha_publicacion
         ) {
 
             const fecha =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
             fecha.classList.add(
                 "meditation-date"
@@ -340,25 +1035,32 @@ function crearMeditacion(lectura) {
 
 
             fecha.innerHTML = `
+
                 <i class="bx bx-calendar"></i>
 
                 Subida el
-                ${lectura.meditacion.fechaPublicacion}
+                ${contenido.fecha_publicacion}
+
             `;
 
 
-            articulo.appendChild(fecha);
+            articulo.appendChild(
+                fecha
+            );
+
         }
 
 
         /* AGRADECIMIENTO */
 
         if (
-            lectura.meditacion.agradecimiento
+            contenido.agradecimiento
         ) {
 
             const agradecimiento =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
             agradecimiento.classList.add(
                 "meditation-thanks"
@@ -366,12 +1068,13 @@ function crearMeditacion(lectura) {
 
 
             agradecimiento.textContent =
-                lectura.meditacion.agradecimiento;
+                contenido.agradecimiento;
 
 
             articulo.appendChild(
                 agradecimiento
             );
+
         }
 
 
@@ -382,7 +1085,9 @@ function crearMeditacion(lectura) {
     } else {
 
         const pendiente =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
         pendiente.classList.add(
             "meditation-pending"
@@ -390,6 +1095,7 @@ function crearMeditacion(lectura) {
 
 
         pendiente.innerHTML = `
+
             <i class="bx bx-book-reader"></i>
 
             <strong>
@@ -400,12 +1106,14 @@ function crearMeditacion(lectura) {
                 Estamos preparando la meditación
                 correspondiente a esta lectura.
             </p>
+
         `;
 
 
         contenedor.appendChild(
             pendiente
         );
+
     }
 
 
@@ -417,50 +1125,51 @@ function crearMeditacion(lectura) {
    MOSTRAR LECTURA COMPLETA
 ========================================================= */
 
-function mostrarLectura() {
+async function mostrarLectura() {
 
     if (!readingContent) {
         return;
     }
 
 
-    const lectura =
-        buscarLectura();
+    readingContent.innerHTML = `
 
+        <div class="reading-not-found">
 
-    readingContent.innerHTML = "";
-
-
-    if (!lectura) {
-
-        const mensaje =
-            document.createElement("div");
-
-        mensaje.classList.add(
-            "reading-not-found"
-        );
-
-
-        mensaje.innerHTML = `
-            <i class="bx bx-book-open"></i>
+            <i class="bx bx-loader-alt bx-spin"></i>
 
             <h2>
-                Lectura no encontrada
+                Cargando lectura...
             </h2>
 
-            <p>
-                Todavía no tenemos contenido
-                para esta fecha.
-            </p>
-        `;
+        </div>
+
+    `;
 
 
-        readingContent.appendChild(
-            mensaje
+    const programacion =
+        await buscarProgramacion();
+
+
+    if (!programacion) {
+
+        mostrarMensajeError(
+            "No existe programación para este día."
         );
 
         return;
     }
+
+
+    const contenido =
+        await buscarContenido(
+            programacion.id
+        );
+
+
+    /* Limpiar */
+
+    readingContent.innerHTML = "";
 
 
     /* ==============================================
@@ -468,7 +1177,9 @@ function mostrarLectura() {
     ============================================== */
 
     const encabezado =
-        document.createElement("header");
+        document.createElement(
+            "header"
+        );
 
     encabezado.classList.add(
         "reading-header"
@@ -476,10 +1187,17 @@ function mostrarLectura() {
 
 
     const titulo =
-        document.createElement("h1");
+        document.createElement(
+            "h1"
+        );
+
 
     titulo.textContent =
-        lectura.titulo;
+        `LECTURA ${programacion.dia} DE ${
+            nombresMeses[
+                programacion.mes
+            ] || programacion.mes
+        }`;
 
 
     encabezado.appendChild(
@@ -498,7 +1216,7 @@ function mostrarLectura() {
 
     readingContent.appendChild(
         crearProgramacion(
-            lectura
+            programacion
         )
     );
 
@@ -509,7 +1227,7 @@ function mostrarLectura() {
 
     readingContent.appendChild(
         crearVideo(
-            lectura
+            contenido
         )
     );
 
@@ -520,7 +1238,8 @@ function mostrarLectura() {
 
     readingContent.appendChild(
         crearLecturaEscrita(
-            lectura
+            programacion,
+            contenido
         )
     );
 
@@ -531,7 +1250,7 @@ function mostrarLectura() {
 
     readingContent.appendChild(
         crearMeditacion(
-            lectura
+            contenido
         )
     );
 
@@ -539,24 +1258,36 @@ function mostrarLectura() {
 
 
 /* =========================================================
-   EVENTOS
+   EVENTO: CAMBIO DE DÍA
 ========================================================= */
 
 if (diaSelect) {
 
     diaSelect.addEventListener(
         "change",
-        mostrarLectura
+        function () {
+
+            mostrarLectura();
+
+        }
     );
 
 }
 
 
+/* =========================================================
+   EVENTO: CAMBIO DE MES
+========================================================= */
+
 if (mesSelect) {
 
     mesSelect.addEventListener(
         "change",
-        mostrarLectura
+        async function () {
+
+            await cargarDias();
+
+        }
     );
 
 }
@@ -566,4 +1297,25 @@ if (mesSelect) {
    INICIAR
 ========================================================= */
 
-mostrarLectura();
+async function iniciarLecturas() {
+
+    if (
+        !mesSelect ||
+        !diaSelect ||
+        !readingContent
+    ) {
+
+        console.error(
+            "No se encontraron los elementos de lecturas."
+        );
+
+        return;
+    }
+
+
+    await cargarMeses();
+
+}
+
+
+iniciarLecturas();
