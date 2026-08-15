@@ -65,12 +65,92 @@
     </header>
 
 
+    <main>
 
     <!-- ==========================================
-         PANEL
+     LOGIN ADMINISTRADOR
     =========================================== -->
 
-    <main>
+        <section id="adminLogin" class="admin-content section">
+
+            <div class="container">
+
+            <div class="admin-card" style="max-width: 500px; margin: 0 auto;">
+
+            <div class="admin-card-header">
+
+                <i class="bx bx-lock-alt"></i>
+
+                <div>
+                    <h2>Acceso de administrador</h2>
+
+                    <p>
+                        Inicia sesión para gestionar las lecturas.
+                    </p>
+                </div>
+
+            </div>
+
+            <form id="loginForm">
+
+                <div class="form-group">
+
+                    <label for="loginEmail">
+                        Correo electrónico
+                    </label>
+
+                    <input
+                        type="email"
+                        id="loginEmail"
+                        placeholder="correo@ejemplo.com"
+                        required
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="loginPassword">
+                        Contraseña
+                    </label>
+
+                    <input
+                        type="password"
+                        id="loginPassword"
+                        placeholder="Tu contraseña"
+                        required
+                    >
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                    style="width: 100%;"
+                >
+
+                    <i class="bx bx-log-in"></i>
+
+                    Iniciar sesión
+
+                </button>
+
+                <div
+                    id="loginMessage"
+                    class="admin-message"
+                ></div>
+
+                </form>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ==========================================
+         PANEL
+        =========================================== -->
 
         <section class="admin-header">
 
@@ -133,13 +213,25 @@
                                 Mes
                             </label>
 
-                            <select id="adminMes">
+                    <select id="adminMes">
 
-                                <option value="agosto">
-                                    Agosto
-                                </option>
+                            <option value="agosto">
+                                Agosto
+                            </option>
 
-                            </select>
+                            <option value="septiembre">
+                                Septiembre
+                            </option>
+
+                            <option value="octubre">
+                                Octubre
+                            </option>
+
+                            <option value="noviembre">
+                                Noviembre
+                            </option>
+
+                    </select>
 
                         </div>
 
@@ -584,7 +676,87 @@
 
                 </div>
 
+            <!-- ==================================
+                IMPORTAR PROGRAMACIONES XLSX
+            =================================== -->
 
+            <div class="admin-card">
+
+                <div class="admin-card-header">
+
+                    <i class="bx bx-spreadsheet"></i>
+
+                    <div>
+
+                        <h2>
+                            Importar programas mensuales
+                        </h2>
+
+                        <p>
+                            Carga las programaciones mensuales desde un archivo Excel.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="archivoProgramaciones">
+                        Archivo Excel
+                    </label>
+
+                    <input
+                        type="file"
+                        id="archivoProgramaciones"
+                        accept=".xlsx,.xls"
+                    >
+
+                    <small>
+                        El archivo debe contener una hoja por cada mes.
+                    </small>
+
+                </div>
+
+
+                <div
+                    id="resultadoImportacion"
+                    class="admin-message"
+                ></div>
+
+
+                <div class="admin-actions">
+
+                    <button
+                        type="button"
+                        id="btnAnalizarExcel"
+                        class="btn btn-outline"
+                    >
+
+                        <i class="bx bx-search"></i>
+
+                        Analizar archivo
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        id="btnImportarExcel"
+                        class="btn btn-primary"
+                        disabled
+                    >
+
+                        <i class="bx bx-cloud-upload"></i>
+
+                        Importar a Supabase
+
+                    </button>
+
+                </div>
+
+            </div>
 
                 <!-- ==================================
                      BOTONES
@@ -642,6 +814,9 @@
     <script src="js/supabase.js"></script>
 
     <script src="js/contenido.js"></script>
+
+    <!-- SheetJS: permite leer archivos XLSX -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 
     <script src="js/admin.js"></script>
 
