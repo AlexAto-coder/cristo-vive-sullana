@@ -1705,3 +1705,27 @@ var(--radius-lg)
     }
 
 }
+
+/* =========================================================
+   NOTAS Y REFERENCIAS BÍBLICAS
+========================================================= */
+
+.bible-footnote {
+    margin: 4px 0 10px 18px;
+    font-size: 0.85rem;
+    font-style: italic;
+    opacity: 0.75;
+}
+
+.footnote-number {
+    font-weight: 700;
+    margin-right: 4px;
+}
+
+.bible-cross-reference {
+    margin: 6px 0;
+    padding-left: 18px;
+    font-size: 0.85rem;
+    font-style: italic;
+    opacity: 0.75;
+}

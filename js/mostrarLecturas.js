@@ -733,6 +733,7 @@ function crearVideo(
 
 /* =========================================================
    CREAR LECTURA BÍBLICA
+   Formatea títulos, versículos y notas bíblicas
 ========================================================= */
 
 function crearLecturaEscrita(
@@ -741,26 +742,20 @@ function crearLecturaEscrita(
 ) {
 
     const contenedor =
-        document.createElement(
-            "section"
-        );
+        document.createElement("section");
 
     contenedor.classList.add(
         "reading-section"
     );
 
-
     contenedor.innerHTML = `
-
         <h2>
             📖 Lectura bíblica
         </h2>
-
     `;
 
 
     const textos = [
-
         {
             referencia:
                 programacion.referencia_1,
@@ -799,8 +794,23 @@ function crearLecturaEscrita(
                     ? contenido.texto_3
                     : ""
         }
-
     ];
+
+
+    /* =====================================================
+       REFERENCIAS QUE NO DEBEN CONFUNDIRSE CON VERSÍCULOS
+    ===================================================== */
+
+    const referenciasBiblicas =
+        /^(?:[123]?\s*(?:Samuel|Reyes|Crónicas|Cr|S|R|Crón|Corintios|Cor|Romanos|Ro|Gálatas|Gá|Efesios|Ef|Filipenses|Fil|Colosenses|Col|Tesalonicenses|Ti|Timoteo|Tito|Hebreos|Heb|Santiago|Stg|Pedro|P|Juan|Jn|Judas|Apocalipsis|Ap|Mateo|Mt|Marcos|Mr|Lucas|Lc|Hechos|Hch|Génesis|Gn|Éxodo|Ex|Levítico|Lv|Números|Nm|Deuteronomio|Dt|Josué|Jos|Jueces|Jue|Rut|Ester|Job|Salmos|Sal|Proverbios|Pr|Eclesiastés|Ec|Cantares|Is|Isaías|Jeremías|Jer|Lamentaciones|Lam|Ezequiel|Ez|Daniel|Dn|Oseas|Os|Joel|Amós|Am|Abdías|Abd|Jonás|Jon|Nahúm|Nah|Habacuc|Hab|Sofonías|Sof|Hageo|Hag|Zacarías|Zac|Malaquías|Mal)\b)/i;
+
+
+    /* =====================================================
+       NOTAS BÍBLICAS / LINGÜÍSTICAS
+    ===================================================== */
+
+    const esNota =
+        /^(?:Heb\.|Gr\.|Lit\.|Aram\.|Lat\.|Sir\.|Es decir|Esto es|Literalmente|Otra traducción|Algunos manuscritos)/i;
 
 
     textos.forEach(
@@ -812,27 +822,25 @@ function crearLecturaEscrita(
 
 
             const bloque =
-                document.createElement(
-                    "article"
-                );
+                document.createElement("article");
 
             bloque.classList.add(
                 "bible-reading"
             );
 
 
+            /* =================================================
+               ENCABEZADO
+            ================================================= */
+
             const encabezado =
-                document.createElement(
-                    "div"
-                );
+                document.createElement("div");
 
             encabezado.classList.add(
                 "bible-reading-header"
             );
 
-
             encabezado.innerHTML = `
-
                 <h3>
                     ${item.referencia}
                 </h3>
@@ -840,14 +848,16 @@ function crearLecturaEscrita(
                 <span class="bible-version">
                     ${item.version || "RVR1960"}
                 </span>
-
             `;
-
 
             bloque.appendChild(
                 encabezado
             );
 
+
+            /* =================================================
+               TEXTO
+            ================================================= */
 
             if (
                 item.texto &&
@@ -855,17 +865,257 @@ function crearLecturaEscrita(
             ) {
 
                 const contenidoTexto =
-                    document.createElement(
-                        "div"
-                    );
+                    document.createElement("div");
 
                 contenidoTexto.classList.add(
                     "bible-text"
                 );
 
 
-                contenidoTexto.textContent =
-                    item.texto;
+                const textoCompleto =
+                    item.texto.trim();
+
+
+                /* =================================================
+                   BUSCAR EL COMIENZO REAL DEL VERSÍCULO 1
+
+                   Evitamos confundir:
+
+                   1 Crónicas 4:
+                   1 Cr. 14.3-7
+                   1 S. 3.2
+
+                   con:
+
+                   1 Estos son...
+                ================================================= */
+
+                const patronPrimerVersiculo =
+                    /(?:^|\s)(1)\s+(?!(?:Crónicas|Cr\.|Corintios|Co\.|Samuel|S\.|Reyes|R\.|Pedro|P\.|Juan|Jn|Timoteo|Ti|Tesalonicenses|Ts)\b)/i;
+
+
+                const coincidenciaTitulo =
+                    textoCompleto.match(
+                        patronPrimerVersiculo
+                    );
+
+
+                let titulo = "";
+                let textoVersiculos =
+                    textoCompleto;
+
+
+                /* =================================================
+                   SEPARAR TÍTULO
+                ================================================= */
+
+                if (
+                    coincidenciaTitulo &&
+                    coincidenciaTitulo.index > 0
+                ) {
+
+                    const posicion =
+                        coincidenciaTitulo.index +
+                        coincidenciaTitulo[0].length -
+                        coincidenciaTitulo[1].length -
+                        1;
+
+
+                    titulo =
+                        textoCompleto
+                            .substring(
+                                0,
+                                posicion
+                            )
+                            .trim();
+
+
+                    textoVersiculos =
+                        textoCompleto
+                            .substring(
+                                posicion
+                            )
+                            .trim();
+                }
+
+
+                /* =================================================
+                   MOSTRAR TÍTULO
+                ================================================= */
+
+                if (titulo) {
+
+                    const tituloElemento =
+                        document.createElement(
+                            "h4"
+                        );
+
+                    tituloElemento.classList.add(
+                        "bible-section-title"
+                    );
+
+                    tituloElemento.textContent =
+                        titulo;
+
+                    contenidoTexto.appendChild(
+                        tituloElemento
+                    );
+                }
+
+
+                /* =================================================
+                   SEPARAR POSIBLES VERSÍCULOS
+                ================================================= */
+
+                const partes =
+                    textoVersiculos.split(
+                        /(?=(?:^|\s)\d{1,3}\s+)/g
+                    );
+
+
+                partes.forEach(
+                    function (parte) {
+
+                        const textoLimpio =
+                            parte.trim();
+
+
+                        if (!textoLimpio) {
+                            return;
+                        }
+
+
+                        /* =================================================
+                           NOTA BÍBLICA
+
+                           Ejemplo:
+
+                           9 Heb. oseb, dolor.
+                        ================================================= */
+
+                        const nota =
+                            textoLimpio.match(
+                                /^(\d{1,3})\s+(Heb\.|Gr\.|Lit\.|Aram\.|Lat\.|Sir\.|Es decir|Esto es|Literalmente|Otra traducción|Algunos manuscritos)\b(.*)$/i
+                            );
+
+
+                        if (nota) {
+
+                            const elementoNota =
+                                document.createElement(
+                                    "div"
+                                );
+
+                            elementoNota.classList.add(
+                                "bible-footnote"
+                            );
+
+                            elementoNota.innerHTML = `
+                                <span class="footnote-number">
+                                    ${nota[1]}
+                                </span>
+                                ${nota[2]}${nota[3]}
+                            `;
+
+                            contenidoTexto.appendChild(
+                                elementoNota
+                            );
+
+                            return;
+                        }
+
+
+                        /* =================================================
+                           REFERENCIA BÍBLICA
+
+                           Ejemplo:
+
+                           1 Crónicas 4:
+                        ================================================= */
+
+                        if (
+                            referenciasBiblicas.test(
+                                textoLimpio
+                            )
+                        ) {
+
+                            const referenciaNota =
+                                document.createElement(
+                                    "div"
+                                );
+
+                            referenciaNota.classList.add(
+                                "bible-cross-reference"
+                            );
+
+                            referenciaNota.textContent =
+                                textoLimpio;
+
+                            contenidoTexto.appendChild(
+                                referenciaNota
+                            );
+
+                            return;
+                        }
+
+
+                        /* =================================================
+                           VERSÍCULO NORMAL
+                        ================================================= */
+
+                        const coincidencia =
+                            textoLimpio.match(
+                                /^(\d{1,3})\s+(.+)$/
+                            );
+
+
+                        const parrafo =
+                            document.createElement(
+                                "p"
+                            );
+
+
+                        if (coincidencia) {
+
+                            const numero =
+                                document.createElement(
+                                    "strong"
+                                );
+
+                            numero.textContent =
+                                coincidencia[1] + " ";
+
+
+                            parrafo.appendChild(
+                                numero
+                            );
+
+
+                            parrafo.appendChild(
+                                document.createTextNode(
+                                    coincidencia[2]
+                                )
+                            );
+
+                        } else {
+
+                            /*
+                               Texto que no comienza
+                               con número: lo dejamos
+                               como párrafo normal.
+                            */
+
+                            parrafo.textContent =
+                                textoLimpio;
+                        }
+
+
+                        contenidoTexto.appendChild(
+                            parrafo
+                        );
+
+                    }
+                );
 
 
                 bloque.appendChild(
@@ -873,6 +1123,10 @@ function crearLecturaEscrita(
                 );
 
             } else {
+
+                /* =================================================
+                   TEXTO PENDIENTE
+                ================================================= */
 
                 const pendiente =
                     document.createElement(
@@ -883,9 +1137,7 @@ function crearLecturaEscrita(
                     "bible-text-pending"
                 );
 
-
                 pendiente.innerHTML = `
-
                     <i class="bx bx-book-open"></i>
 
                     <strong>
@@ -896,14 +1148,11 @@ function crearLecturaEscrita(
                         El texto de esta lectura
                         será incorporado próximamente.
                     </p>
-
                 `;
-
 
                 bloque.appendChild(
                     pendiente
                 );
-
             }
 
 
@@ -917,7 +1166,6 @@ function crearLecturaEscrita(
 
     return contenedor;
 }
-
 
 /* =========================================================
    CREAR MEDITACIÓN
