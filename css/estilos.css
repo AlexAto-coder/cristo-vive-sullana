@@ -437,6 +437,18 @@ button {
     margin: 0 auto;
 }
 
+.featured-video-player {
+    display: flex;
+    justify-content: center;
+}
+
+.featured-video-player video {
+    width: 100%;
+    max-width: 640px;
+    height: auto;
+    display: block;
+}
+
 .video-placeholder {
     min-height: 400px;
 
@@ -491,6 +503,16 @@ button {
     grid-template-columns: 1fr;
 
     gap: 25px;
+}
+
+.daily-reading .videos-grid {
+    display: flex;
+    justify-content: center;
+}
+
+.daily-reading .video-card {
+    max-width: 380px;
+    width: 100%;
 }
 
 .video-card {

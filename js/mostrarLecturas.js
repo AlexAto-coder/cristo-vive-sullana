@@ -674,6 +674,9 @@ function crearVideo(
         iframe.loading =
             "lazy";
 
+        iframe.referrerPolicy =
+            "strict-origin-when-cross-origin";
+
 
         iframe.allow =
             "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";

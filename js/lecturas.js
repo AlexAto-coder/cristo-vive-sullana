@@ -5,9 +5,9 @@
 
 const lecturas = [
     {
-        fecha: "2026-08-12",
-        titulo: "LECTURA 12 DE AGOSTO",
-        youtubeId: "pbXm6tUyc3M",
+        fecha: "2026-09-12",
+        titulo: "LECTURA 12 DE SEPTIEMBRE",
+        youtubeId: "2uAWAl8CJas",
         categoria: "Lectura diaria",
         descripcion: "Lectura diaria de la Palabra de Dios."
     }
