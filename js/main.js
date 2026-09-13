@@ -65,13 +65,13 @@ const videos = [
     {
         titulo: "La fe de Abraham",
         youtubeId: "FNzb4LlO08Y",
-        categoria: "Estudio bíblico",
+        categoria: "Reflexión",
         descripcion: "Una reflexión sobre el camino de fe de Abraham y su confianza en Dios."
     },
 
     {
         titulo: "Cuando Dios parece guardar silencio",
-        youtubeId: "FNzb4LlO08Y",
+        youtubeId: "MlNRCYRfm7E",
         categoria: "Reflexión",
         descripcion: "Una palabra de esperanza para aprender a confiar en Dios en tiempos difíciles."
     },
