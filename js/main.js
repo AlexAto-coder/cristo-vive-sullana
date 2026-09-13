@@ -77,10 +77,10 @@ const videos = [
     },
 
     {
-        titulo: "Dios todavía tiene un propósito",
-        youtubeId: "VIDEO_ID_3",
+        titulo: "Cuando la gracia se encuentra con la verdad",
+        youtubeId: "c76rtCLcUhI",
         categoria: "Predicación",
-        descripcion: "Una enseñanza para recordar que Dios continúa obrando en nuestras vidas."
+        descripcion: "Una enseñanza donde Dios te ofrece perdón, una nueva oportunidad y una vida transformada."
     }
 
 ];
