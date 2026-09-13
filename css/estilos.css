@@ -735,6 +735,15 @@ button {
     gap: 30px;
 }
 
+.cta-content {
+    width: min(90%, 900px);
+    margin-inline: auto;
+}
+
+.cta-content .cta-button {
+    margin-inline: auto;
+}
+
 .cta-content span {
     color: var(--color-secondary-light);
 
