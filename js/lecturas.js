@@ -9,7 +9,7 @@ const lecturas = [
         titulo: "LECTURA 13 DE SEPTIEMBRE",
         youtubeId: "Mk1mNs42CkY",
         categoria: "Lectura diaria",
-        descripcion: "Lectura diaria de la Palabra de Dios."
+        descripcion: "Lecturas para el día de hoy."
     }
 ];
 
