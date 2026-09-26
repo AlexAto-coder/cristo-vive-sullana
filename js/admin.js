@@ -13,6 +13,7 @@ const loginForm = document.getElementById("loginForm");
 const loginEmail = document.getElementById("loginEmail");
 const loginPassword = document.getElementById("loginPassword");
 const loginMessage = document.getElementById("loginMessage");
+const forgotPassword = document.getElementById("forgotPassword");
 
 const adminHeader = document.querySelector(".admin-header");
 const adminPanel = document.querySelector(
@@ -158,6 +159,76 @@ if (loginForm) {
 
             mostrarPanelAdmin();
 
+        }
+    );
+
+}
+
+/* =========================================================
+   RECUPERAR CONTRASEÑA
+========================================================= */
+
+if (forgotPassword) {
+
+    forgotPassword.addEventListener(
+        "click",
+        async function (event) {
+
+            event.preventDefault();
+
+            const email =
+                loginEmail.value.trim();
+
+            if (!email) {
+
+                loginMessage.textContent =
+                    "Escribe primero tu correo electrónico.";
+
+                loginMessage.className =
+                    "admin-message error";
+
+                loginEmail.focus();
+
+                return;
+            }
+
+            loginMessage.textContent =
+                "Enviando correo de recuperación...";
+
+            loginMessage.className =
+                "admin-message";
+
+            const { error } =
+                await supabaseClient.auth.resetPasswordForEmail(
+                    email,
+                    {
+                        redirectTo:
+                            window.location.origin +
+                            window.location.pathname
+                    }
+                );
+
+            if (error) {
+
+                console.error(
+                    "Error recuperando contraseña:",
+                    error
+                );
+
+                loginMessage.textContent =
+                    "No se pudo enviar el correo de recuperación.";
+
+                loginMessage.className =
+                    "admin-message error";
+
+                return;
+            }
+
+            loginMessage.textContent =
+                "Revisa tu correo para restablecer tu contraseña.";
+
+            loginMessage.className =
+                "admin-message success";
         }
     );
 
