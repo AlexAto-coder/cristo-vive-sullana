@@ -7,7 +7,7 @@ const lecturas = [
     {
         fecha: "2026-10-03",
         titulo: "LECTURA 03 DE OCTUBRE",
-        youtubeId: "i6cLmFsr8RU",
+        youtubeId: "DyYe0fkYEaw",
         categoria: "Lectura diaria",
         descripcion: "Lecturas para el día de hoy."
     }
