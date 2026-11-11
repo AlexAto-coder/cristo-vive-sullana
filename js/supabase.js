@@ -15,3 +15,5 @@ const supabaseClient = window.supabase.createClient(
 );
 
 console.log("Supabase conectado:", supabaseClient);
+
+
