@@ -1,11 +1,7 @@
-/* =========================================================
-   CRISTO VIVE – SULLANA
-   PANEL DE ADMINISTRACIÓN
-   CONEXIÓN CON SUPABASE
-========================================================= */
 
 /* =========================================================
    AUTENTICACIÓN DEL ADMINISTRADOR
+   CRISTO VIVE – SULLANA
 ========================================================= */
 
 const adminLogin = document.getElementById("adminLogin");
@@ -15,50 +11,98 @@ const loginPassword = document.getElementById("loginPassword");
 const loginMessage = document.getElementById("loginMessage");
 const forgotPassword = document.getElementById("forgotPassword");
 
+// Formulario de recuperación
+const resetPasswordSection =
+    document.getElementById("resetPasswordSection");
+
+const resetPasswordForm =
+    document.getElementById("resetPasswordForm");
+
+const newPassword =
+    document.getElementById("newPassword");
+
+const confirmPassword =
+    document.getElementById("confirmPassword");
+
+const resetPasswordMessage =
+    document.getElementById("resetPasswordMessage");
+
+// Panel administrativo
 const adminHeader = document.querySelector(".admin-header");
+
 const adminPanel = document.querySelector(
-    ".admin-content.section:not(#adminLogin)"
+    ".admin-content.section:not(#adminLogin):not(#resetPasswordSection)"
 );
 
 
 /* =========================================================
-   MOSTRAR / OCULTAR PANEL
+   MOSTRAR Y OCULTAR PANTALLAS
 ========================================================= */
 
 function mostrarPanelAdmin() {
 
-    if (adminLogin) {
-        adminLogin.style.display = "none";
+    if (adminLogin) adminLogin.style.display = "none";
+
+    if (resetPasswordSection) {
+        resetPasswordSection.style.display = "none";
     }
 
-    if (adminHeader) {
-        adminHeader.style.display = "";
-    }
+    if (adminHeader) adminHeader.style.display = "";
 
-    if (adminPanel) {
-        adminPanel.style.display = "";
-    }
+    if (adminPanel) adminPanel.style.display = "";
+
+    // Cargar información solamente para administradores
+    inicializarPanelAdmin();
 }
 
 
 function mostrarLogin() {
 
-    if (adminLogin) {
-        adminLogin.style.display = "";
+    if (adminLogin) adminLogin.style.display = "";
+
+    if (resetPasswordSection) {
+        resetPasswordSection.style.display = "none";
     }
 
-    if (adminHeader) {
-        adminHeader.style.display = "none";
-    }
+    if (adminHeader) adminHeader.style.display = "none";
 
-    if (adminPanel) {
-        adminPanel.style.display = "none";
+    if (adminPanel) adminPanel.style.display = "none";
+}
+
+
+function mostrarFormularioRecuperacion() {
+
+    if (adminLogin) adminLogin.style.display = "none";
+
+    if (adminHeader) adminHeader.style.display = "none";
+
+    if (adminPanel) adminPanel.style.display = "none";
+
+    if (resetPasswordSection) {
+        resetPasswordSection.style.display = "block";
     }
 }
 
 
 /* =========================================================
-   COMPROBAR SESIÓN
+   DETECTAR ENLACE DE RECUPERACIÓN
+========================================================= */
+
+const parametrosHash = new URLSearchParams(
+    window.location.hash.substring(1)
+);
+
+const parametrosUrl = new URLSearchParams(
+    window.location.search
+);
+
+const esEnlaceRecuperacion =
+    parametrosHash.get("type") === "recovery" ||
+    parametrosUrl.get("type") === "recovery";
+
+
+/* =========================================================
+   COMPROBAR SESIÓN Y ROL DE ADMINISTRADOR
 ========================================================= */
 
 async function comprobarSesion() {
@@ -68,30 +112,45 @@ async function comprobarSesion() {
 
     if (error) {
 
-        console.error(
-            "Error comprobando sesión:",
-            error
-        );
+        console.error("Error comprobando sesión:", error);
 
         mostrarLogin();
 
         return;
     }
 
-    if (data.session) {
-
-        console.log(
-            "Administrador autenticado:",
-            data.session.user.email
-        );
-
-        mostrarPanelAdmin();
-
-    } else {
+    if (!data.session) {
 
         mostrarLogin();
 
+        return;
     }
+
+    const usuario = data.session.user;
+
+    const rol = usuario.app_metadata?.role;
+
+    if (rol !== "admin") {
+
+        console.warn("Acceso denegado. Usuario sin rol admin.");
+
+        await supabaseClient.auth.signOut();
+
+        mostrarLogin();
+
+        if (loginMessage) {
+            loginMessage.textContent =
+                "No tienes permisos para acceder al panel administrativo.";
+
+            loginMessage.className = "admin-message error";
+        }
+
+        return;
+    }
+
+    console.log("Administrador autorizado:", usuario.email);
+
+    mostrarPanelAdmin();
 }
 
 
@@ -101,145 +160,216 @@ async function comprobarSesion() {
 
 if (loginForm) {
 
-    loginForm.addEventListener(
-        "submit",
-        async function (event) {
+    loginForm.addEventListener("submit", async function(event) {
 
-            event.preventDefault();
+        event.preventDefault();
 
-            loginMessage.textContent =
-                "Iniciando sesión...";
+        loginMessage.textContent = "Iniciando sesión...";
+        loginMessage.className = "admin-message";
 
-            loginMessage.className =
-                "admin-message";
+        const email = loginEmail.value.trim();
+        const password = loginPassword.value;
 
+        const { data, error } =
+            await supabaseClient.auth.signInWithPassword({
+                email,
+                password
+            });
 
-            const email =
-                loginEmail.value.trim();
+        if (error) {
 
-            const password =
-                loginPassword.value;
-
-
-            const { data, error } =
-                await supabaseClient.auth.signInWithPassword({
-                    email: email,
-                    password: password
-                });
-
-
-            if (error) {
-
-                console.error(
-                    "Error iniciando sesión:",
-                    error
-                );
-
-                loginMessage.textContent =
-                    "Correo o contraseña incorrectos.";
-
-                loginMessage.className =
-                    "admin-message error";
-
-                return;
-            }
-
-
-            console.log(
-                "Sesión iniciada:",
-                data.user.email
-            );
+            console.error("Error iniciando sesión:", error);
 
             loginMessage.textContent =
-                "Acceso correcto.";
+                "Correo o contraseña incorrectos.";
 
-            loginMessage.className =
-                "admin-message success";
+            loginMessage.className = "admin-message error";
 
-
-            mostrarPanelAdmin();
-
+            return;
         }
-    );
 
+        const rol = data.user.app_metadata?.role;
+
+        if (rol !== "admin") {
+
+            await supabaseClient.auth.signOut();
+
+            loginMessage.textContent =
+                "No tienes permisos para acceder al panel.";
+
+            loginMessage.className = "admin-message error";
+
+            return;
+        }
+
+        loginMessage.textContent = "Acceso correcto.";
+        loginMessage.className = "admin-message success";
+
+        mostrarPanelAdmin();
+    });
 }
 
+
 /* =========================================================
-   RECUPERAR CONTRASEÑA
+   SOLICITAR RECUPERACIÓN DE CONTRASEÑA
 ========================================================= */
 
 if (forgotPassword) {
 
-    forgotPassword.addEventListener(
-        "click",
-        async function (event) {
+    forgotPassword.addEventListener("click", async function(event) {
 
-            event.preventDefault();
+        event.preventDefault();
 
-            const email =
-                loginEmail.value.trim();
+        const email = loginEmail.value.trim();
 
-            if (!email) {
-
-                loginMessage.textContent =
-                    "Escribe primero tu correo electrónico.";
-
-                loginMessage.className =
-                    "admin-message error";
-
-                loginEmail.focus();
-
-                return;
-            }
+        if (!email) {
 
             loginMessage.textContent =
-                "Enviando correo de recuperación...";
+                "Escribe primero tu correo electrónico.";
 
-            loginMessage.className =
-                "admin-message";
+            loginMessage.className = "admin-message error";
 
-            const { error } =
-                await supabaseClient.auth.resetPasswordForEmail(
-                    email,
-                    {
-                        redirectTo:
-                            window.location.origin +
-                            window.location.pathname
-                    }
-                );
+            loginEmail.focus();
 
-            if (error) {
-
-                console.error(
-                    "Error recuperando contraseña:",
-                    error
-                );
-
-                loginMessage.textContent =
-                    "No se pudo enviar el correo de recuperación.";
-
-                loginMessage.className =
-                    "admin-message error";
-
-                return;
-            }
-
-            loginMessage.textContent =
-                "Revisa tu correo para restablecer tu contraseña.";
-
-            loginMessage.className =
-                "admin-message success";
+            return;
         }
-    );
 
+        loginMessage.textContent =
+            "Enviando correo de recuperación...";
+
+        loginMessage.className = "admin-message";
+
+        const { error } =
+            await supabaseClient.auth.resetPasswordForEmail(
+                email,
+                {
+                    redirectTo:
+                        window.location.origin +
+                        window.location.pathname
+                }
+            );
+
+        if (error) {
+
+            console.error("Error recuperando contraseña:", error);
+
+            loginMessage.textContent =
+                "No se pudo enviar el correo de recuperación.";
+
+            loginMessage.className = "admin-message error";
+
+            return;
+        }
+
+        loginMessage.textContent =
+            "Revisa tu correo para restablecer tu contraseña.";
+
+        loginMessage.className = "admin-message success";
+    });
 }
+
+
+/* =========================================================
+   GUARDAR NUEVA CONTRASEÑA
+========================================================= */
+
+if (resetPasswordForm) {
+
+    resetPasswordForm.addEventListener("submit", async function(event) {
+
+        event.preventDefault();
+
+        const password = newPassword.value;
+        const confirmacion = confirmPassword.value;
+
+        if (password.length < 8) {
+
+            resetPasswordMessage.textContent =
+                "La contraseña debe tener al menos 8 caracteres.";
+
+            resetPasswordMessage.className = "admin-message error";
+
+            return;
+        }
+
+        if (password !== confirmacion) {
+
+            resetPasswordMessage.textContent =
+                "Las contraseñas no coinciden.";
+
+            resetPasswordMessage.className = "admin-message error";
+
+            return;
+        }
+
+        resetPasswordMessage.textContent =
+            "Actualizando contraseña...";
+
+        resetPasswordMessage.className = "admin-message";
+
+        const { error } =
+            await supabaseClient.auth.updateUser({
+                password: password
+            });
+
+        if (error) {
+
+            console.error("Error actualizando contraseña:", error);
+
+            resetPasswordMessage.textContent =
+                "No se pudo actualizar la contraseña. Solicita un nuevo enlace.";
+
+            resetPasswordMessage.className = "admin-message error";
+
+            return;
+        }
+
+        resetPasswordMessage.textContent =
+            "¡Contraseña actualizada correctamente!";
+
+        resetPasswordMessage.className = "admin-message success";
+
+        resetPasswordForm.reset();
+
+        await supabaseClient.auth.signOut();
+
+        mostrarLogin();
+
+        if (loginMessage) {
+            loginMessage.textContent =
+                "Ya puedes iniciar sesión con tu nueva contraseña.";
+
+            loginMessage.className = "admin-message success";
+        }
+    });
+}
+
+
+/* =========================================================
+   DETECTAR EVENTO DE RECUPERACIÓN DE SUPABASE
+========================================================= */
+
+supabaseClient.auth.onAuthStateChange((event) => {
+
+    if (event === "PASSWORD_RECOVERY") {
+
+        mostrarFormularioRecuperacion();
+    }
+});
 
 
 /* =========================================================
    INICIAR COMPROBACIÓN
 ========================================================= */
 
-comprobarSesion();
+if (esEnlaceRecuperacion) {
+
+    mostrarFormularioRecuperacion();
+
+} else {
+
+    comprobarSesion();
+}
 
 /* =========================================================
    ELEMENTOS PRINCIPALES
@@ -318,7 +448,7 @@ const contenidoMeditacion =
 
 let programacionActual = null;
 let contenidoActual = null;
-
+let panelInicializado = false;
 
 /* =========================================================
    MOSTRAR MENSAJE
@@ -854,15 +984,25 @@ adminMes.addEventListener(
 
 
 /* =========================================================
-   INICIO
+   INICIALIZAR PANEL ADMINISTRATIVO
 ========================================================= */
 
-if (comprobarSupabase()) {
+function inicializarPanelAdmin() {
+
+    // Evitar inicializar varias veces
+    if (panelInicializado) {
+        return;
+    }
+
+    if (!comprobarSupabase()) {
+        return;
+    }
+
+    panelInicializado = true;
 
     actualizarDias();
 
     cargarDia();
-
 }
 
 /* =========================================================

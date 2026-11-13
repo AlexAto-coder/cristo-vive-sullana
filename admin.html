@@ -163,6 +163,68 @@
 
         </section>
 
+
+        <!-- ==========================================
+            RESTABLECER CONTRASEÑA
+        =========================================== -->
+
+        <section
+            id="resetPasswordSection"
+            class="admin-content section"
+            style="display: none;"
+        >
+            <div class="container">
+
+                <div class="admin-card" style="max-width: 500px; margin: 0 auto;">
+
+                    <div class="admin-card-header">
+                        <i class="bx bx-lock-alt"></i>
+
+                        <div>
+                            <h2>Crear nueva contraseña</h2>
+                            <p>Establece una nueva contraseña para tu cuenta.</p>
+                        </div>
+                    </div>
+
+                    <form id="resetPasswordForm">
+
+                        <div class="form-group">
+                            <label for="newPassword">Nueva contraseña</label>
+                            <input
+                                type="password"
+                                id="newPassword"
+                                minlength="8"
+                                required
+                                placeholder="Mínimo 8 caracteres"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirmar contraseña</label>
+                            <input
+                                type="password"
+                                id="confirmPassword"
+                                minlength="8"
+                                required
+                                placeholder="Repite la contraseña"
+                            >
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">
+                            <i class="bx bx-save"></i>
+                            Guardar nueva contraseña
+                        </button>
+
+                        <div id="resetPasswordMessage" class="admin-message"></div>
+
+                    </form>
+
+                </div>
+
+            </div>
+        </section>
+
+
         <!-- ==========================================
          PANEL
         =========================================== -->
@@ -805,22 +867,7 @@
                     </button>
 
                 </div>
-
-                <a
-                    href="#"
-                    id="forgotPassword"
-                    style="
-                        display: block;
-                        margin-top: 15px;
-                        text-align: center;
-                        color: var(--color-primary);
-                        text-decoration: none;
-                        font-size: 0.9rem;
-                    "
-                >
-                    ¿Olvidaste tu contraseña?
-                </a>
-
+       
                 <div
                     id="adminMessage"
                     class="admin-message"
