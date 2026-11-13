@@ -1,0 +1,328 @@
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description"
+        content="Comunícate con Cristo Vive – Sullana. Estamos aquí para escucharte y orar contigo.">
+
+    <title>Contacto | Cristo Vive – Sullana</title>
+
+    <link rel="stylesheet" href="css/estilos.css">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="container header-container">
+
+            <a href="index.html" class="logo">
+                <span class="logo-icon">
+                    <i class="bx bx-cross"></i>
+                </span>
+                <span class="logo-text">
+                    <strong>Cristo Vive</strong>
+                    <small>Sullana</small>
+                </span>
+            </a>
+
+            <button class="menu-toggle" id="menuToggle"
+                aria-label="Abrir menú">
+                <i class="bx bx-menu"></i>
+            </button>
+
+            <nav class="nav" id="nav">
+
+                <a href="index.html" class="nav-link">
+                    <i class="bx bx-home"></i> Inicio
+                </a>
+
+                <a href="lecturas.html" class="nav-link">
+                    <i class="bx bx-book-open"></i> Lecturas
+                </a>
+
+                <a href="videos.html" class="nav-link">
+                    <i class="bx bx-video"></i> Videos
+                </a>
+
+                <a href="reflexiones.html" class="nav-link">
+                    <i class="bx bx-heart"></i> Reflexiones
+                </a>
+
+                <a href="estudios.html" class="nav-link">
+                    <i class="bx bx-book"></i> Estudios
+                </a>
+
+                <a href="sermones.html" class="nav-link">
+                    <i class="bx bx-microphone"></i> Sermones
+                </a>
+
+                <a href="sobre-mi.html" class="nav-link">
+                    <i class="bx bx-user"></i> Nosotros
+                </a>
+
+                <a href="contacto.html" class="nav-link active">
+                    <i class="bx bx-envelope"></i> Contacto
+                </a>
+
+            </nav>
+        </div>
+    </header>
+
+    <main>
+
+        <!-- ENCABEZADO -->
+        <section class="page-header">
+            <div class="container">
+
+                <span class="section-subtitle">
+                    Estamos para servirte
+                </span>
+
+                <h1>Contáctanos</h1>
+
+                <p>
+                    Queremos escucharte, acompañarte y orar contigo.
+                    Será una alegría saber de ti.
+                </p>
+
+            </div>
+        </section>
+
+        <!-- CONTACTO -->
+        <section class="section">
+            <div class="container">
+
+                <div class="section-heading">
+                    <span class="section-subtitle">
+                        Cristo Vive – Sullana
+                    </span>
+
+                    <h2>Nos gustaría conocerte</h2>
+
+                    <p>
+                        Si tienes alguna consulta, petición de oración
+                        o deseas conocer más sobre nuestra iglesia,
+                        puedes escribirnos.
+                    </p>
+                </div>
+
+                <div class="contact-content">
+
+                    <!-- INFORMACIÓN -->
+                    <div class="contact-info">
+
+                        <h2>Estamos aquí para ti</h2>
+
+                        <p>
+                            Somos una comunidad de fe que busca
+                            compartir el amor de Dios y llevar
+                            esperanza a las familias.
+                        </p>
+
+                        <div class="contact-item">
+                            <i class="bx bx-church"></i>
+                            <div>
+                                <h3>Grupo Cristiano</h3>
+                                <p>Cristo Vive – Sullana</p>
+                            </div>
+                        </div>
+
+                        <div class="contact-item">
+                            <i class="bx bx-map"></i>
+                            <div>
+                                <h3>Ubicación</h3>
+                                <p>Sullana, Piura, Perú</p>
+                            </div>
+                        </div>
+
+                        <div class="contact-item">
+                            <i class="bx bxl-youtube"></i>
+                            <div>
+                                <h3>YouTube</h3>
+                                <a
+                                    href="https://www.youtube.com/@CristoViveSullanaoficial"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    youtube.com/@CristoViveSullanaoficial
+                                    <i class="bx bx-link-external"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                       <div class="contact-item">
+                            <i class="bx bxl-facebook-circle"></i>
+                            <div>
+                                <h3>Facebook</h3>
+                                <a
+                                    href="https://www.facebook.com/groups/528691617306717"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    facebook.com/groups/528691617306717
+                                    <i class="bx bx-link-external"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- FORMULARIO -->
+                    <div class="contact-form-container">
+
+                        <h2>Envíanos un mensaje</h2>
+
+                        <form id="contactForm">
+
+                            <div class="form-group">
+                                <label for="nombre">Nombre completo</label>
+                                <input
+                                    type="text"
+                                    id="nombre"
+                                    name="nombre"
+                                    placeholder="Escribe tu nombre"
+                                    required
+                                >
+                            </div>
+
+                            <div class="form-group">
+                                <label for="correo">Correo electrónico</label>
+                                <input
+                                    type="email"
+                                    id="correo"
+                                    name="correo"
+                                    placeholder="correo@ejemplo.com"
+                                    required
+                                >
+                            </div>
+
+                            <div class="form-group">
+                                <label for="asunto">Asunto</label>
+                                <select id="asunto" name="asunto" required>
+                                    <option value="">Selecciona un asunto</option>
+                                    <option value="Petición de oración">
+                                        Petición de oración
+                                    </option>
+                                    <option value="Consulta">
+                                        Consulta
+                                    </option>
+                                    <option value="Información sobre la iglesia">
+                                        Información sobre la iglesia
+                                    </option>
+                                    <option value="Otro">
+                                        Otro
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="mensaje">Tu mensaje</label>
+                                <textarea
+                                    id="mensaje"
+                                    name="mensaje"
+                                    rows="6"
+                                    placeholder="Escribe tu mensaje..."
+                                    required
+                                ></textarea>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bx bx-send"></i>
+                                Enviar mensaje
+                            </button>
+
+                            <p id="contactMessage"
+                               class="admin-message"
+                               aria-live="polite"></p>
+
+                        </form>
+
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container footer-container">
+
+            <div class="footer-brand">
+
+                <a href="index.html" class="logo">
+                    <span class="logo-icon">
+                        <i class="bx bx-cross"></i>
+                    </span>
+
+                    <span class="logo-text">
+                        <strong>Cristo Vive</strong>
+                        <small>Sullana</small>
+                    </span>
+                </a>
+
+                <p>
+                    Compartiendo la Palabra de Dios
+                    y llevando un mensaje de esperanza.
+                </p>
+
+            </div>
+
+            <div class="footer-links">
+                <h3>Enlaces</h3>
+
+                <a href="index.html">Inicio</a>
+                <a href="lecturas.html">Lecturas</a>
+                <a href="videos.html">Videos</a>
+                <a href="reflexiones.html">Reflexiones</a>
+                <a href="estudios.html">Estudios Bíblicos</a>
+                <a href="sermones.html">Sermones</a>
+                <a href="sobre-mi.html">Nosotros</a>
+                <a href="contacto.html">Contacto</a>
+            </div>
+
+            <div class="footer-social">
+                <h3>Síguenos</h3>
+
+                <a href="https://www.youtube.com/@CristoViveSullanaoficial"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                    <i class="bx bxl-youtube"></i> YouTube
+                </a>
+
+                <a href="https://www.facebook.com/groups/528691617306717"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                    <i class="bx bxl-facebook-circle"></i> Facebook
+                </a>
+            </div>
+
+        </div>
+
+        <div class="footer-bottom">
+            <p>
+                © 2026 Cristo Vive – Sullana.
+                Todos los derechos reservados.
+            </p>
+        </div>
+    </footer>
+
+   <!-- JavaScript principal -->
+        <script src="js/main.js"></script>
+
+        <!-- Supabase -->
+        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+        <script src="js/supabase.js"></script>
+
+        <!-- Formulario de contacto -->
+        <script src="js/contacto.js"></script>
+
+</body>
+</html>
