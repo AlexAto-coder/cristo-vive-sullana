@@ -1029,10 +1029,18 @@ let programacionesExcel = [];
 ========================================================= */
 
 const mesesExcel = [
+    "enero",
+    "febrero",
+    "marzo",
+    "abril",
+    "mayo",
+    "junio",
+    "julio",
     "agosto",
     "septiembre",
     "octubre",
-    "noviembre"
+    "noviembre",
+    "diciembre"
 ];
 
 
@@ -1060,10 +1068,18 @@ function mostrarResultadoImportacion(texto, tipo = "success") {
 function obtenerDiasDelMes(mes) {
 
     const dias = {
+        enero: 31,
+        febrero: 28,
+        marzo: 31,
+        abril: 30,
+        mayo: 31,
+        junio: 30,
+        julio: 31,
         agosto: 31,
         septiembre: 30,
         octubre: 31,
-        noviembre: 30
+        noviembre: 30,
+        diciembre: 31
     };
 
     return dias[mes] || 0;
@@ -1093,62 +1109,64 @@ function normalizarTexto(valor) {
    BUSCAR ENCABEZADOS
 ========================================================= */
 
+
 function encontrarFilaEncabezados(filas) {
 
     for (let i = 0; i < filas.length; i++) {
 
-        const fila = filas[i] || [];
+        const textos = (filas[i] || []).map(function (celda) {
 
-        const textos =
-            fila.map(function (celda) {
+            return normalizarTexto(celda)
+                .toUpperCase()
+                .replace(/\s+/g, " ")
+                .trim();
 
-                return normalizarTexto(celda)
-                    .toUpperCase();
+        });
 
-            });
+        const buscarColumna = function (nombres) {
+            return textos.findIndex(
+                texto => nombres.includes(texto)
+            );
+        };
 
+        const columnaDia = buscarColumna([
+            "DÍA",
+            "DIA"
+        ]);
 
-        const tieneDia =
-            textos.includes("DÍA") ||
-            textos.includes("DIA");
+        const columnaLect1 = buscarColumna([
+            "LECT 01",
+            "CITA BÍB #1",
+            "CITA BIB #1"
+        ]);
 
-        const tieneLect1 =
-            textos.includes("LECT 01");
+        const columnaLect2 = buscarColumna([
+            "LECT 02",
+            "CITA BÍB #2",
+            "CITA BIB #2"
+        ]);
 
-        const tieneLect2 =
-            textos.includes("LECT 02");
-
-        const tieneLect3 =
-            textos.includes("LECT 03");
-
+        const columnaLect3 = buscarColumna([
+            "LECT 03",
+            "CITA BÍB #3",
+            "CITA BIB #3"
+        ]);
 
         if (
-            tieneDia &&
-            tieneLect1 &&
-            tieneLect2 &&
-            tieneLect3
+            columnaDia !== -1 &&
+            columnaLect1 !== -1 &&
+            columnaLect2 !== -1 &&
+            columnaLect3 !== -1
         ) {
 
             return {
                 indice: i,
 
                 columnas: {
-
-                    dia:
-                        textos.findIndex(
-                            x =>
-                                x === "DÍA" ||
-                                x === "DIA"
-                        ),
-
-                    lect1:
-                        textos.indexOf("LECT 01"),
-
-                    lect2:
-                        textos.indexOf("LECT 02"),
-
-                    lect3:
-                        textos.indexOf("LECT 03")
+                    dia: columnaDia,
+                    lect1: columnaLect1,
+                    lect2: columnaLect2,
+                    lect3: columnaLect3
                 }
             };
         }
@@ -1156,7 +1174,6 @@ function encontrarFilaEncabezados(filas) {
 
     return null;
 }
-
 
 /* =========================================================
    ANALIZAR UNA HOJA
@@ -1337,6 +1354,7 @@ function analizarHoja(nombreHoja, hoja) {
    ANALIZAR ARCHIVO EXCEL
 ========================================================= */
 
+
 async function analizarArchivoExcel() {
 
     if (!archivoProgramaciones.files.length) {
@@ -1349,7 +1367,6 @@ async function analizarArchivoExcel() {
         return;
     }
 
-
     if (typeof XLSX === "undefined") {
 
         mostrarResultadoImportacion(
@@ -1360,143 +1377,83 @@ async function analizarArchivoExcel() {
         return;
     }
 
-
-    const archivo =
-        archivoProgramaciones.files[0];
-
+    const archivo = archivoProgramaciones.files[0];
 
     mostrarResultadoImportacion(
         "Analizando archivo...",
         "success"
     );
 
-
     btnImportarExcel.disabled = true;
-
 
     try {
 
-        const buffer =
-            await archivo.arrayBuffer();
+        const buffer = await archivo.arrayBuffer();
 
-
-        const workbook =
-            XLSX.read(
-                buffer,
-                {
-                    type: "array"
-                }
-            );
-
+        const workbook = XLSX.read(
+            buffer,
+            {
+                type: "array"
+            }
+        );
 
         console.log(
             "Hojas encontradas:",
             workbook.SheetNames
         );
 
+        // Identificar las hojas que corresponden a meses
+        const hojasMeses = workbook.SheetNames.filter(
+            function (nombre) {
 
-        const hojasEncontradas =
-            workbook.SheetNames.map(
-                function (nombre) {
+                const mes = nombre.trim().toLowerCase();
 
-                    return nombre
-                        .trim()
-                        .toLowerCase();
-
-                }
-            );
-
-
-        /* -----------------------------------------
-           COMPROBAR LAS 4 HOJAS
-        ----------------------------------------- */
-
-        for (
-            const mes of mesesExcel
-        ) {
-
-            if (
-                !hojasEncontradas.includes(mes)
-            ) {
-
-                throw new Error(
-                    `Falta la hoja "${mes}".`
-                );
+                return mesesExcel.includes(mes);
             }
-        }
+        );
 
+        // Comprobar que exista al menos una hoja válida
+        if (hojasMeses.length === 0) {
+
+            throw new Error(
+                "El archivo no contiene ninguna hoja con un nombre de mes válido."
+            );
+        }
 
         programacionesExcel = [];
 
+        // Procesar únicamente las hojas de meses reconocidos
+        for (const nombreHoja of hojasMeses) {
 
-        /* -----------------------------------------
-           PROCESAR CADA HOJA
-        ----------------------------------------- */
+            const hoja = workbook.Sheets[nombreHoja];
 
-        for (
-            const nombreHoja of workbook.SheetNames
-        ) {
-
-            const mes =
-                nombreHoja
-                    .trim()
-                    .toLowerCase();
-
-
-            if (
-                !mesesExcel.includes(mes)
-            ) {
-
-                continue;
-            }
-
-
-            const hoja =
-                workbook.Sheets[nombreHoja];
-
-
-            const registros =
-                analizarHoja(
-                    nombreHoja,
-                    hoja
-                );
-
+            const registros = analizarHoja(
+                nombreHoja,
+                hoja
+            );
 
             programacionesExcel =
-                programacionesExcel.concat(
-                    registros
-                );
+                programacionesExcel.concat(registros);
         }
 
-
-        /* -----------------------------------------
-           COMPROBAR TOTAL
-        ----------------------------------------- */
-
-        if (
-            programacionesExcel.length !== 122
-        ) {
+        if (programacionesExcel.length === 0) {
 
             throw new Error(
-                `Se esperaban 122 programaciones y se encontraron ${programacionesExcel.length}.`
+                "No se encontraron programaciones para importar."
             );
         }
 
-
         mostrarResultadoImportacion(
-            `✅ Archivo correcto: ${programacionesExcel.length} programaciones encontradas en 4 hojas.`,
+            `✅ Archivo correcto: ${programacionesExcel.length} programaciones encontradas en ${hojasMeses.length} hoja(s).`,
             "success"
         );
 
-
         btnImportarExcel.disabled = false;
-
 
         console.log(
             "Programaciones listas para importar:",
             programacionesExcel
         );
-
 
     } catch (error) {
 
@@ -1505,20 +1462,16 @@ async function analizarArchivoExcel() {
             error
         );
 
-
         programacionesExcel = [];
-
 
         mostrarResultadoImportacion(
             `❌ ${error.message}`,
             "error"
         );
 
-
         btnImportarExcel.disabled = true;
     }
 }
-
 
 /* =========================================================
    IMPORTAR A SUPABASE
@@ -1651,10 +1604,18 @@ function actualizarDias() {
     const mes = adminMes.value;
 
     const diasPorMes = {
-        agosto: 31,
-        septiembre: 30,
-        octubre: 31,
-        noviembre: 30
+    enero: 31,
+    febrero: 28,
+    marzo: 31,
+    abril: 30,
+    mayo: 31,
+    junio: 30,
+    julio: 31,
+    agosto: 31,
+    septiembre: 30,
+    octubre: 31,
+    noviembre: 30,
+    diciembre: 31
     };
 
     const cantidadDias =
