@@ -1893,3 +1893,230 @@ button {
 .contact-item a i {
     margin-left: 4px;
 }
+
+
+/* =========================================================
+   PÁGINA NOSOTROS
+   CRISTO VIVE – SULLANA
+========================================================= */
+
+.about-hero {
+    min-height: 480px;
+    display: flex;
+    align-items: center;
+    padding: 80px 0;
+    color: var(--color-white);
+    background: linear-gradient(110deg, #102845, #17365d 70%, #294d75);
+}
+
+.about-hero-container {
+    max-width: 1180px;
+}
+
+.about-eyebrow,
+.purpose-label {
+    display: inline-block;
+    color: var(--color-secondary-light);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.about-hero h1 {
+    margin: 20px 0;
+    font-size: clamp(2.7rem, 7vw, 4.8rem);
+    line-height: 1.05;
+}
+
+.about-hero h1 span {
+    color: var(--color-secondary-light);
+}
+
+.about-hero p {
+    max-width: 650px;
+    margin-bottom: 28px;
+    color: rgba(255,255,255,.82);
+    font-size: 1.08rem;
+}
+
+.about-intro {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    align-items: start;
+    gap: 35px;
+    max-width: 950px;
+}
+
+.about-intro-mark {
+    width: 100px;
+    height: 100px;
+    display: grid;
+    place-items: center;
+    border-radius: 22px;
+    background: rgba(197,155,69,.12);
+    color: var(--color-secondary);
+    font-size: 3rem;
+}
+
+.about-intro-copy h2 {
+    margin-bottom: 18px;
+    color: var(--color-primary);
+    font-size: 2rem;
+}
+
+.about-intro-copy p {
+    margin-bottom: 15px;
+    color: var(--color-gray);
+    line-height: 1.9;
+}
+
+.about-purpose {
+    background: var(--color-light);
+}
+
+.purpose-grid,
+.values-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+}
+
+.purpose-card,
+.value-card {
+    padding: 30px;
+    background: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+}
+
+.purpose-icon {
+    width: 55px;
+    height: 55px;
+    display: grid;
+    place-items: center;
+    margin-bottom: 20px;
+    border-radius: 14px;
+    background: rgba(197,155,69,.12);
+    color: var(--color-secondary);
+    font-size: 1.8rem;
+}
+
+.purpose-label {
+    color: var(--color-secondary);
+    font-size: .78rem;
+}
+
+.purpose-card h3,
+.value-card h3 {
+    margin: 10px 0;
+    color: var(--color-primary);
+    font-size: 1.25rem;
+}
+
+.purpose-card p,
+.value-card p {
+    color: var(--color-gray);
+    line-height: 1.8;
+}
+
+.about-values {
+    background: var(--color-white);
+}
+
+.values-grid {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.value-card {
+    transition: var(--transition);
+}
+
+.value-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+}
+
+.value-card > i {
+    color: var(--color-secondary);
+    font-size: 2.3rem;
+}
+
+.about-scripture {
+    background: var(--color-light);
+    text-align: center;
+}
+
+.scripture-container {
+    max-width: 850px;
+}
+
+.scripture-quote {
+    display: block;
+    margin-bottom: 15px;
+    color: var(--color-secondary);
+    font-size: 3rem;
+}
+
+.scripture-container blockquote {
+    margin: 20px 0;
+    color: var(--color-primary);
+    font-size: clamp(1.5rem, 4vw, 2.2rem);
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+.scripture-reference {
+    color: var(--color-secondary);
+    font-weight: 700;
+}
+
+.scripture-explanation {
+    max-width: 650px;
+    margin: 20px auto 0;
+    color: var(--color-gray);
+}
+
+.about-cta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+@media (max-width: 768px) {
+    .about-hero {
+        min-height: 420px;
+        padding: 65px 0;
+    }
+
+    .about-intro {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .about-intro-mark {
+        width: 75px;
+        height: 75px;
+        font-size: 2.3rem;
+    }
+
+    .purpose-grid,
+    .values-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .purpose-card,
+    .value-card {
+        padding: 24px;
+    }
+
+    .about-cta-actions {
+        flex-direction: column;
+    }
+
+    .about-cta-actions .btn {
+        width: 100%;
+    }
+}
+
