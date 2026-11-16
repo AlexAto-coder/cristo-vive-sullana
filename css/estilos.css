@@ -1873,3 +1873,23 @@ button {
         padding: 25px;
     }
 }
+
+
+/* Enlaces de redes sociales en Contacto */
+
+.contact-item a {
+    color: var(--color-primary);
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+    transition: var(--transition);
+}
+
+.contact-item a:hover {
+    color: var(--color-secondary);
+}
+
+.contact-item a i {
+    margin-left: 4px;
+}
