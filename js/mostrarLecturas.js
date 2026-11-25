@@ -232,17 +232,17 @@ async function cargarMeses() {
 
 
         /*
-           Seleccionar agosto si existe.
-           Así mantenemos el comportamiento
-           que ya tenía la página.
-        */
+   Seleccionar enero al ingresar.
+   Si enero no está disponible,
+   seleccionar el primer mes existente.
+*/
 
         if (
-            mesesUnicos.includes("agosto")
+            mesesUnicos.includes("enero")
         ) {
 
             mesSelect.value =
-                "agosto";
+                "enero";
 
         } else {
 
@@ -359,14 +359,16 @@ async function cargarDias() {
         }
 
 
-        /*
-           Seleccionamos el primer día
-           disponible.
-        */
+       /*
+   Seleccionar el día 1 si está disponible.
+   Si no existe, seleccionar el primer día disponible.
+*/
+
+        const primerDia =
+            data.find(item => Number(item.dia) === 1);
 
         diaSelect.value =
-            data[0].dia;
-
+            primerDia ? primerDia.dia : data[0].dia;
 
         await mostrarLectura();
 
